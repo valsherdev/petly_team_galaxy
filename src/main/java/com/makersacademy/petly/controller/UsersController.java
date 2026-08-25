@@ -1,7 +1,7 @@
-package com.makersacademy.acebook.controller;
+package com.makersacademy.petly.controller;
 
-import com.makersacademy.acebook.model.User;
-import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.petly.model.User;
+import com.makersacademy.petly.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;

@@ -1,4 +1,4 @@
-package com.makersacademy.acebook;
+package com.makersacademy.petly;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

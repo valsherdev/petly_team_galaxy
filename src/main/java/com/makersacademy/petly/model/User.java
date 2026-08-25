@@ -1,4 +1,4 @@
-package com.makersacademy.acebook.model;
+package com.makersacademy.petly.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

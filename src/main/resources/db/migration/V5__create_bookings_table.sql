@@ -1,0 +1,10 @@
+CREATE TABLE bookings (
+    id BIGSERIAL PRIMARY KEY,
+    pet_id BIGINT NOT NULL  REFERENCES pets(id) on DELETE CASCADE,
+    service_id BIGINT NOT NULL  REFERENCES services(id) on DELETE CASCADE,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    owner_id BIGINT NOT NULL  REFERENCES users(id) on DELETE CASCADE,
+    provider_id BIGINT NOT NULL  REFERENCES users(id) on DELETE CASCADE
+);
