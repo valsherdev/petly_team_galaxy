@@ -3,20 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Role Selection</title>
+    <link rel="stylesheet" href="/tailwind.css">
 </head>
 <body>
-<h1>Welcome to Petly!</h1>
-<form action="/users/select-role" method="POST">
+<div th:replace="~{fragments/navbars :: navbar_role_selector}"></div>
+<div class="flex h-screen justify-center">
     <div>
-        <label for="name">Your Name / Business Name:</label>
-        <input type="text" id="name" name="name" required placeholder="e.g. Alex Smith or Happy Paws Care" />
+        <h1>Welcome to Petly!</h1>
     </div>
 
     <div>
-        <label>Select Your Account Type:</label>
-        <button type="submit" name="role" value="PET_OWNER">I am a Pet Owner</button>
-        <button type="submit" name="role" value="SERVICE_PROVIDER">I am a Service Provider</button>
+        <form action="/users/select-role" method="POST">
+            <div>
+                <label for="name">Your Name / Business Name:</label>
+                <input type="text" id="name" name="name" required placeholder="e.g. Alex Smith or Happy Paws Care" />
+            </div>
+
+            <div class="flex h-screen justify-center">
+                <label>Select Your Account Type</label>
+                </br>
+                <button class="bg-emerald-300 hover:bg-emerald-500 max-w-sm rounded overflow-hidden shadow-lg box-border size-32 border-1"
+                        type="submit" name="role" value="PET_OWNER">I am a Pet Owner
+                </button>
+                <button class="bg-emerald-300 hover:bg-emerald-500 max-w-sm rounded overflow-hidden shadow-lg box-border size-32 border-1"
+                        type="submit" name="role" value="SERVICE_PROVIDER">I am a Service Provider
+                </button>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 </body>
 </html>
