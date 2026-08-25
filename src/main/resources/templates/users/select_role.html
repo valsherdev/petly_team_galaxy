@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Role Selection</title>
+</head>
+<body>
+<h1>Welcome to Petly!</h1>
+<form action="/users/select-role" method="POST">
+    <div>
+        <label for="name">Your Name / Business Name:</label>
+        <input type="text" id="name" name="name" required placeholder="e.g. Alex Smith or Happy Paws Care" />
+    </div>
+
+    <div>
+        <label>Select Your Account Type:</label>
+        <button type="submit" name="role" value="PET_OWNER">I am a Pet Owner</button>
+        <button type="submit" name="role" value="SERVICE_PROVIDER">I am a Service Provider</button>
+    </div>
+</form>
+</body>
+</html>
