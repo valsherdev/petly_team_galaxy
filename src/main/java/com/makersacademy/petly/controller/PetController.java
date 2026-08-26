@@ -9,16 +9,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PetController {
@@ -67,6 +65,38 @@ public class PetController {
         petRepository.save(pet);
         return "redirect:/my-pets";
     }
+
+    @GetMapping("/my-pets/{id}/edit")
+    public String editPetProfile(@PathVariable Long id, Model model) {
+
+        Optional<Pet> pet = petRepository.findById(id);
+        if (pet.isPresent()) {
+            model.addAttribute("pet", pet.get());
+            return "pets/edit-pet";
+        }
+        return "redirect:/my-pets";
+    }
+
+    @PostMapping("/my-pets/{id}/edit")
+    public String updatePetProfile(@PathVariable Long id,
+                                   @ModelAttribute Pet petForm,
+                                   @RequestParam(value = "imageFile", required = false)
+                                   MultipartFile imageFile) {
+
+        Optional<Pet> pet = petRepository.findById(id);
+        if (pet.isPresent()) {
+            Pet existingPet = pet.get();
+
+            existingPet.setName(petForm.getName());
+            existingPet.setType(petForm.getType());
+            existingPet.setBreed(petForm.getBreed());
+            existingPet.setAge(petForm.getAge());
+            existingPet.setDescription(petForm.getDescription());
+            petRepository.save(existingPet);
+        }
+        return "redirect:/my-pets";
+    }
+
 
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder

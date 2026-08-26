@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Role Selection</title>
+    <title>My Pets</title>
     <link rel="stylesheet" href="/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -28,6 +28,8 @@
         Breed: <span th:text="${pet.breed}">Breed</span>
         Age: <span th:text="${pet.age}">Age</span>
         Description: <span th:text="${pet.description}">Description</span>
+
+        <a th:href="@{/my-pets/{id}/edit(id=${pet.id})}">Edit</a>
     </div>
 
 </div>
