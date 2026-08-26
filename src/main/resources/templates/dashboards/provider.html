@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Service Provider Dashboard - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-<header>
-    <nav>
-        <strong>Petly</strong> |
-        <a th:href="@{/dashboard/provider}">Dashboard</a> |
-        <a th:href="@{/logout}">Logout</a>
-    </nav>
-</header>
+<div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
+
 <main>
     <section>
         <h1>Welcome back, <span th:text="${user.name}"></span>!</h1>
@@ -114,5 +111,6 @@
     </section>
 
 </main>
+<!--<div th:replace="~{fragments/footer :: footer}"></div>-->
 </body>
 </html>
