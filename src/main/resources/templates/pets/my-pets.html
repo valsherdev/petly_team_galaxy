@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Role Selection</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="flex flex-col h-lvh">
+<div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
+<div class="flex flex-col items-center justify-start pt-8 pb-12 px-4 flex-grow max-w-4xl mx-auto w-full">
+
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2 text-center">
+        My Pets
+    </h1>
+
+    <a href="/my-pets/add">Add a pet</a>
+
+
+
+    <div th:if="${pets.empty}">
+        <p>You haven't added any pets to your profile</p>
+    </div>
+
+    <div th:each="pet : ${pets}">
+        Name: <span th:text="${pet.name}">Name</span>
+        Type: <span th:text="${pet.type}">Type</span>
+        Breed: <span th:text="${pet.breed}">Breed</span>
+        Age: <span th:text="${pet.age}">Age</span>
+        Description: <span th:text="${pet.description}">Description</span>
+    </div>
+
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

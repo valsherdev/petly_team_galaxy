@@ -61,6 +61,8 @@ public class BookingController {
         Service service = serviceRepository.findById(serviceId).orElseThrow();
         User owner = getCurrentUser();
         Pet pet = petRepository.findById(petId).orElseThrow();
+        return new RedirectView("/dashboard/owner");
+
     }
 
     private User getCurrentUser() {
