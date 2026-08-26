@@ -94,6 +94,48 @@ public class BookingController {
         return new RedirectView("/dashboard/owner");
     }
 
+    @GetMapping("/dashboard/provider/bookings")
+    public String providerBookings(Model model) {
+        User provider = getCurrentUser();
+
+        List<Booking> pendingBookings = bookingRepository.findByProviderIdAndStatus(provider.getId(), "PENDING");
+        List<Booking> confirmedBookings = bookingRepository.findByProviderIdAndStatus(provider.getId(), "CONFIRMED");
+
+        model.addAttribute("pendingBookings", pendingBookings);
+        model.addAttribute("confirmedBookings", confirmedBookings);
+        return "bookings/provider";
+    }
+
+
+    @PostMapping("/bookings/{id}/approve")
+    public RedirectView approveBooking(@PathVariable Long id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow();
+        User provider = getCurrentUser();
+
+        if (!booking.getProvider().getId().equals(provider.getId())) {
+            return new RedirectView("/dashboard/provider/bookings");
+        }
+
+        booking.setStatus("CONFIRMED");
+        bookingRepository.save(booking);
+        return new RedirectView("/dashboard/provider/bookings");
+    }
+
+    @PostMapping("/bookings/{id}/decline")
+    public RedirectView declineBooking(@PathVariable Long id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow();
+        User provider = getCurrentUser();
+
+        if (!booking.getProvider().getId().equals(provider.getId())) {
+            return new RedirectView("/dashboard/provider/bookings");
+        }
+
+        booking.setStatus("DECLINED");
+        bookingRepository.save(booking);
+        return new RedirectView("/dashboard/provider/bookings");
+    }
+
+
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()

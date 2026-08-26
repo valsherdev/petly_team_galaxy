@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Requests - Petly</title>
+</head>
+<body>
+<header>
+  <nav>
+    <strong>Petly</strong> |
+    <a th:href="@{/dashboard/provider}">Dashboard</a> |
+    <a th:href="@{/dashboard/provider/bookings}">Booking Requests</a> |
+    <a th:href="@{/logout}">Logout</a>
+  </nav>
+</header>
+<main>
+  <h1>Booking Requests</h1>
+
+  <hr />
+  <section>
+    <h2>Pending Requests</h2>
+    <table th:if="${not #lists.isEmpty(pendingBookings)}">
+      <thead>
+      <tr>
+        <th>Service</th>
+        <th>Pet</th>
+        <th>Owner</th>
+        <th>Start</th>
+        <th>End</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="booking : ${pendingBookings}">
+        <td th:text="${booking.service.name}"></td>
+        <td th:text="${booking.pet.name}"></td>
+        <td th:text="${booking.owner.name}"></td>
+        <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+        <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+        <td>
+          <form th:action="@{/bookings/{id}/approve(id=${booking.id})}" method="POST" style="display:inline;">
+            <button type="submit">Approve</button>
+          </form>
+          <form th:action="@{/bookings/{id}/decline(id=${booking.id})}" method="POST" style="display:inline;">
+            <button type="submit">Decline</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(pendingBookings)}">No pending requests.</p>
+  </section>
+
+  <hr />
+  <section>
+    <h2>Upcoming Confirmed Bookings</h2>
+    <table th:if="${not #lists.isEmpty(confirmedBookings)}">
+      <thead>
+      <tr>
+        <th>Service</th>
+        <th>Pet</th>
+        <th>Owner</th>
+        <th>Start</th>
+        <th>End</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="booking : ${confirmedBookings}">
+        <td th:text="${booking.service.name}"></td>
+        <td th:text="${booking.pet.name}"></td>
+        <td th:text="${booking.owner.name}"></td>
+        <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+        <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(confirmedBookings)}">No confirmed bookings yet.</p>
+  </section>
+</main>
+</body>
+</html>
