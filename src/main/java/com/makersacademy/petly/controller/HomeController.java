@@ -1,6 +1,8 @@
 package com.makersacademy.petly.controller;
 
+import com.makersacademy.petly.model.Service;
 import com.makersacademy.petly.model.User;
+import com.makersacademy.petly.repository.ServiceRepository;
 import com.makersacademy.petly.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,11 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 @Controller
 public class HomeController {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private ServiceRepository serviceRepository;
 
 	@RequestMapping(value = "/")
 	public RedirectView index() {
@@ -30,7 +37,11 @@ public class HomeController {
 
 	@GetMapping("/dashboard/provider")
 	public String providerDashboard(Model model) {
-		model.addAttribute("user", getCurrentUser());
+		User user = getCurrentUser();
+		List<Service> services = serviceRepository.findByProvider(user);
+		model.addAttribute("user", user);
+		model.addAttribute("services", services);
+		model.addAttribute("newService", new Service());
 		return "dashboards/provider";
 	}
 
