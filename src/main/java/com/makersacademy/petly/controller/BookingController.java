@@ -1,5 +1,6 @@
 package com.makersacademy.petly.controller;
 
+import com.makersacademy.petly.model.Booking;
 import com.makersacademy.petly.model.Pet;
 import com.makersacademy.petly.model.Service;
 import com.makersacademy.petly.model.User;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -61,8 +63,35 @@ public class BookingController {
         Service service = serviceRepository.findById(serviceId).orElseThrow();
         User owner = getCurrentUser();
         Pet pet = petRepository.findById(petId).orElseThrow();
-        return new RedirectView("/dashboard/owner");
 
+        LocalDateTime start = LocalDateTime.parse(startTime, FORMATTER);
+        LocalDateTime end;
+
+        if (service.getDuration() != null) {
+            end = start.plus(service.getDuration());
+        } else {
+            end = LocalDateTime.parse(endTime, FORMATTER);
+        }
+
+        List<Booking> existingBookings = bookingRepository.findByServiceId(serviceId);
+        boolean isAvailable = true;
+
+        for (Booking booking: existingBookings) {
+            boolean overlaps = start.isBefore(booking.getEndTime()) && end.isAfter(booking.getStartTime());
+            boolean isConfirmed = booking.getStatus().equals("CONFIRMED");
+            if (overlaps && isConfirmed) {
+                isAvailable = false;
+                break;
+            }
+        }
+
+        if (!isAvailable) {
+            return new RedirectView("/services/" + serviceId + "/book?error=conflict");
+        }
+
+        Booking booking = new Booking(pet, service, start, end, owner,service.getProvider());
+        bookingRepository.save(booking);
+        return new RedirectView("/dashboard/owner");
     }
 
     private User getCurrentUser() {
