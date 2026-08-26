@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Service - Petly</title>
+</head>
+<body>
+<h1 th:text="${service.name}"></h1>
+<p th:text="'Provided by ' + ${service.provider.name}"></p>
+<p th:text="${service.description}"></p>
+<p th:text="${service.price} + ' / ' + ${service.priceUnit}"></p>
+<p th:if="${service.location}" th:text="'Location: ' + ${service.location}"></p>
+
+<p th:if="${error} == 'conflict'" style="color:red;">
+    Sorry, that time slot is no longer available.
+</p>
+
+<div th:if="${#lists.isEmpty(myPets)}">
+    <p>You don't have any pets added yet.</p>
+</div>
+
+<form th:if="${not #lists.isEmpty(myPets)}" th:action="@{/bookings/create}" method="POST">
+    <input type="hidden" name="serviceId" th:value="${service.id}" />
+
+    <div>
+        <label for="petId">Pet:</label>
+        <select id="petId" name="petId" required>
+            <option th:each="pet : ${myPets}" th:value="${pet.id}" th:text="${pet.name}"></option>
+        </select>
+    </div>
+
+    <br/>
+
+    <div>
+        <label for="startTime">Start:</label>
+        <input type="datetime-local" id="startTime" name="startTime" required />
+    </div>
+
+    <br/>
+
+    <div th:if="${service.durationMinutes} == null">
+        <label for="endTime">End:</label>
+        <input type="datetime-local" id="endTime" name="endTime" required />
+    </div>
+    <p th:if="${service.durationMinutes} != null"
+       th:text="'Duration: ' + ${service.durationMinutes} + ' minutes'"></p>
+
+    <br/>
+    <button type="submit">Book</button>
+</form>
+</body>
+</html>
