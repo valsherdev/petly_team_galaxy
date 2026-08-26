@@ -1,0 +1,40 @@
+<!--<!DOCTYPE html>-->
+<!--    <html xmlns:th="http://www.thymeleaf.org"-->
+<!--          xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >-->
+<!--    <head lang="en">-->
+<!--        <meta charset="UTF-8"/>-->
+<!--        <title>Acebook</title>-->
+<!--        <link rel="stylesheet" href="/main.css" />-->
+<!--    </head>-->
+<!--    <body>-->
+
+<!--    <h1>Main page</h1>-->
+
+<!--    <div sec:authorize="isAuthenticated()" id="greeting">-->
+<!--        Signed in as <span sec:authentication="principal.attributes['email']"></span>-->
+<!--    </div>-->
+<!--    -->
+<!--    </body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS v4 | Maven Tailwind Plugin by 4ndreiDev -->
+    <link rel="stylesheet" href="/tailwind.css">
+    <title>Tailwind App</title>
+</head>
+<body>
+<div class="flex h-screen items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
+    <div class="text-center">
+        <h1 class="text-5xl font-bold text-white mb-4">Welcome to Petly!</h1>
+        <p class="text-lg text-blue-100">Powered by Maven Tailwind Plugin • Created by 4ndreiDev</p>
+        <div sec:authorize="isAuthenticated()" id="greeting">
+            Signed in as <span sec:authentication="principal.attributes['email']"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

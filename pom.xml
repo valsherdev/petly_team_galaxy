@@ -115,6 +115,22 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>io.github.4ndreidev</groupId>
+                <artifactId>tailwind-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <inputFile>src/main/resources/static/css/input.css</inputFile>
+                    <outputFile>src/main/resources/static/css/output.css</outputFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

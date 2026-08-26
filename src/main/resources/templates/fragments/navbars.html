@@ -1,0 +1,72 @@
+<nav th:fragment="navbar_role_selector" class="bg-white border-b border-gray-100 shadow-sm"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+            <div class="">
+                <a href="/" class="flex-shrink-0 flex items-center italic text-2xl font-extrabold tracking-tight text-emerald-600 hover:text-emerald-700 flex items-center gap-2">
+                    <span>🐾</span> Petly
+                </a>
+            </div>
+
+            <div class="grid grid-cols-[1fr_auto] gap-4 items-center">
+                <div class="text-sm font-semibold text-gray-700 grid grid-flow-col justify-end" sec:authorize="isAuthenticated()" id="greeting">
+                    Signed is as <span class="pl-1" sec:authentication="principal.attributes['email']"></span>
+                </div>
+                <a href="/logout" class="w-max px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Logout</a>
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+<nav th:fragment="navbar_pet_owner" class="bg-white border-b border-gray-100 shadow-sm" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+            <div class="flex-shrink-0 flex items-center">
+                <a href="/" class="text-2xl font-extrabold tracking-tight text-emerald-600 hover:text-emerald-700 flex items-center gap-2">
+                    <span>🐾</span> Petly
+                </a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">My Pets</a>
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">My Bookings</a>
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Services</a>
+            </div>
+
+            <div class="grid grid-cols-[1fr_auto] gap-4 items-center">
+                <div class="text-sm font-semibold text-gray-700 grid grid-flow-col justify-end" sec:authorize="isAuthenticated()" id="greeting">
+                    Signed is as <span class="pl-1" sec:authentication="principal.attributes['email']"></span>
+                </div>
+                <a href="/logout" class="w-max px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<nav th:fragment="navbar_service_provider" class="bg-white border-b border-gray-100 shadow-sm" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+            <div class="flex-shrink-0 flex items-center">
+                <a href="/" class="text-2xl font-extrabold tracking-tight text-emerald-600 hover:text-emerald-700 flex items-center gap-2">
+                    <span>🐾</span> Petly
+                </a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Service Profile</a>
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Dashboard</a>
+            </div>
+
+            <div class="grid grid-cols-[1fr_auto] gap-4 items-center">
+                <div class="text-sm font-semibold text-gray-700 grid grid-flow-col justify-end" sec:authorize="isAuthenticated()" id="greeting">
+                    Signed is as <span class="pl-1" sec:authentication="principal.attributes['email']"></span>
+                </div>
+                <a href="/logout" class="w-max px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
