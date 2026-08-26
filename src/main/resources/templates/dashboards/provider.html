@@ -1,10 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Service Provider Dashboard</title>
+    <title>Service Provider Dashboard - Petly</title>
 </head>
 <body>
-<h2>Please add your services</h2>
+<header>
+    <nav>
+        <strong>Petly</strong> |
+        <a th:href="@{/dashboard/provider}">Dashboard</a> |
+        <a th:href="@{/logout}">Logout</a>
+    </nav>
+</header>
+<main>
+    <section>
+        <h1>Welcome back, <span th:text="${user.name}"></span>!</h1>
+    </section>
+
+    <hr />
+    <section>
+        <h2>Add a New Service</h2>
+        <form th:action="@{/services/create}" th:object="${newService}" method="POST">
+
+            <div>
+                <label for="name">Name of Your Service:</label>
+                <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required />
+            </div>
+
+            <br />
+
+            <div>
+                <label for="type">Category:</label>
+                <select id="type" th:field="*{type}" required>
+                    <option value="" disabled selected>Select a Category</option>
+                    <option value="PET_CARE">Pet Care</option>
+                    <option value="GROOMING">Grooming</option>
+                    <option value="VETERINARY">Veterinary</option>
+                </select>
+            </div>
+            <br />
+
+            <div>
+                <label for="duration">Duration (in minutes, optional):</label>
+                <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1" />
+            </div>
+            <br />
+
+            <div>
+                <label for="price">Price (£):</label>
+                <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required />
+            </div>
+
+            <br />
+
+            <div>
+                <label for="priceUnit">Price Unit:</label>
+                <select id="priceUnit" th:field="*{priceUnit}" required>
+                    <option value="PER_HOUR">per hour</option>
+                    <option value="PER_DAY">per day</option>
+                    <option value="FIXED">fixed</option>
+                </select>
+            </div>
+
+            <br />
+
+            <div>
+                <label for="location">Location:</label>
+                <input type="text" id="location" th:field="*{location}" placeholder="e.g. Central London" />
+            </div>
+
+            <br />
+
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" th:field="*{description}" rows="4" cols="50" placeholder="Describe your service..." required></textarea>
+            </div>
+
+            <br />
+
+            <button type="submit">Save</button>
+        </form>
+    </section>
+
+    <hr />
+    <section>
+        <h2>My Services</h2>
+        <div th:if="${not #lists.isEmpty(services)}">
+            <article th:each="service : ${services}">
+                <h3 th:text="${service.name}"></h3>
+                <p><strong>Category:</strong> <span th:text="${service.type}"></span></p>
+                <p th:text="${service.description}"></p>
+
+                <p>
+                    <strong>Duration:</strong>
+                    <span th:text="${service.durationMinutes} != null ? ${service.durationMinutes} + ' mins' : 'Flexible'"></span>
+                </p>
+
+                <p>
+                    <strong>Price:</strong>
+                    £<span th:text="${service.price}"></span>
+                    <span th:if="${service.priceUnit != null and service.priceUnit != 'FIXED'}"
+                          th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>
+                </p>
+
+                <p th:if="${service.location != null and !#strings.isEmpty(service.location)}">
+                    <strong>Location:</strong> <span th:text="${service.location}"></span>
+                </p>
+
+                <hr />
+            </article>
+        </div>
+        <p th:if="${#lists.isEmpty(services)}">You haven't added any services yet.</p>
+    </section>
+
+</main>
 </body>
 </html>
