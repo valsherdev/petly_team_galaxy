@@ -1,0 +1,1 @@
+ALTER TABLE services ALTER COLUMN duration TYPE NUMERIC(21,0) USING extract(epoch from duration)::numeric(21,0);
