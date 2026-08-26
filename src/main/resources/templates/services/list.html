@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Services - Petly</title>
+</head>
+<body>
+<h1>Browse Services</h1>
+
+<nav>
+    <a th:href="@{/services}">All</a> |
+    <a th:href="@{/services(type='PET_CARE')}">Pet Care</a> |
+    <a th:href="@{/services(type='GROOMING')}">Grooming</a> |
+    <a th:href="@{/services(type='VETERINARY')}">Veterinary</a>
+</nav>
+
+<hr/>
+
+<div th:each="service : ${services}">
+    <h3 th:text="${service.name}"></h3>
+    <p th:text="'Provided by ' + ${service.provider.name}"></p>
+    <p th:text="${service.description}"></p>
+    <p th:text="${service.price} + ' / ' + ${service.priceUnit}"></p>
+    <p th:if="${service.location}" th:text="'Location: ' + ${service.location}"></p>
+    <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>
+    <hr/>
+</div>
+
+<p th:if="${#lists.isEmpty(services)}">No services found.</p>
+</body>
+</html>
