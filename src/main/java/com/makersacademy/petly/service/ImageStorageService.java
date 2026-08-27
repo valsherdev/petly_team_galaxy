@@ -18,9 +18,9 @@ public class ImageStorageService {
     private final String bucket;
 
     public ImageStorageService(
-            @Value("${supabase.url:https://localhost.supabase.co}") String supabaseUrl,
-            @Value("${supabase.service-key:dummy-local-key}") String serviceKey,
-            @Value("${supabase.storage-bucket:petly-uploads}") String bucket
+            @Value("${supabase.url}") String supabaseUrl,
+            @Value("${supabase.service-key}") String serviceKey,
+            @Value("${supabase.storage-bucket}") String bucket
     ) {
         this.supabaseUrl = supabaseUrl;
         this.bucket = bucket;
