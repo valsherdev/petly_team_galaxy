@@ -3,29 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Browse Services - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
 </head>
 <body>
-<h1>Browse Services</h1>
+<div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 
-<nav>
-    <a th:href="@{/services}">All</a> |
-    <a th:href="@{/services(type='PET_CARE')}">Pet Care</a> |
-    <a th:href="@{/services(type='GROOMING')}">Grooming</a> |
-    <a th:href="@{/services(type='VETERINARY')}">Veterinary</a>
-</nav>
+<main>
+    <section>
+        <h1>Browse Services</h1>
+
+        <nav>
+            <a th:href="@{/services}">All</a> |
+            <a th:href="@{/services(type='PET_CARE')}">Pet Care</a> |
+            <a th:href="@{/services(type='GROOMING')}">Grooming</a> |
+            <a th:href="@{/services(type='VETERINARY')}">Veterinary</a>
+        </nav>
+    </section>
 
 <hr/>
 
-<div th:each="service : ${services}">
-    <h3 th:text="${service.name}"></h3>
-    <p th:text="'Provided by ' + ${service.provider.name}"></p>
-    <p th:text="${service.description}"></p>
-    <p th:text="${service.price} + ' / ' + ${service.priceUnit}"></p>
-    <p th:if="${service.location}" th:text="'Location: ' + ${service.location}"></p>
-    <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>
-    <hr/>
-</div>
+    <section>
+        <div th:if="${not #lists.isEmpty(services)}">
+            <article th:each="service : ${services}">
+                <h3 th:text="${service.name}"></h3>
+                <p th:text="'Provided by ' + ${service.provider.name}"></p>
+                <p th:text="${service.description}"></p>
 
-<p th:if="${#lists.isEmpty(services)}">No services found.</p>
+                <p>
+                    <strong>Duration:</strong>
+                    <span th:text="${service.durationMinutes} != null ? ${service.durationMinutes} + ' mins' : 'Flexible'"></span>
+                </p>
+
+                <p>
+                    <strong>Price:</strong>
+                    £<span th:text="${service.price}"></span>
+                    <span th:if="${service.priceUnit != null and service.priceUnit != 'FIXED'}"
+                          th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>
+                </p>
+
+                <p th:if="${service.location != null and !#strings.isEmpty(service.location)}">
+                    <strong>Location:</strong> <span th:text="${service.location}"></span>
+                </p>
+
+                <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>
+
+                <hr/>
+            </article>
+        </div>
+        <p th:if="${#lists.isEmpty(services)}">No services found.</p>
+    </section>
+</main>
 </body>
 </html>

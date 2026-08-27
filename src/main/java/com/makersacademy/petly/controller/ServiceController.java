@@ -9,10 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -44,6 +41,52 @@ public class ServiceController {
         serviceRepository.save(service);
         return new RedirectView("/dashboard/provider");
     }
+
+    @GetMapping("/services/{id}/edit")
+    public String editService(@PathVariable Long id, Model model) {
+        User provider = getCurrentUser();
+        Service service = serviceRepository.findById(id).orElseThrow();
+        if (!service.getProvider().getId().equals(provider.getId())) {
+            return "redirect:/dashboard/provider";
+        }
+        model.addAttribute("service", service);
+        return "services/edit";
+    }
+
+    @PostMapping("/services/{id}/update")
+    public RedirectView updateService(@PathVariable Long id, @ModelAttribute Service updatedService) {
+        Service service = serviceRepository.findById(id).orElseThrow();
+        User provider = getCurrentUser();
+        if (!service.getProvider().getId().equals(provider.getId())) {
+            return new RedirectView("/dashboard/provider");
+        }
+
+        service.setName(updatedService.getName());
+        service.setType(updatedService.getType());
+        service.setPrice(updatedService.getPrice());
+        service.setPriceUnit(updatedService.getPriceUnit());
+        service.setLocation(updatedService.getLocation());
+        service.setDescription(updatedService.getDescription());
+        service.setDurationMinutes(updatedService.getDurationMinutes());
+        serviceRepository.save(service);
+
+        return new RedirectView("/dashboard/provider");
+    }
+
+    @PostMapping("/services/{id}/delete")
+    public RedirectView deleteService(@PathVariable Long id) {
+        Service service = serviceRepository.findById(id).orElseThrow();
+        User user = getCurrentUser();
+
+        if (!service.getProvider().getId().equals(user.getId())) {
+            return new RedirectView("/dashboard/provider");
+        }
+
+        serviceRepository.delete(service);
+        return new RedirectView("/dashboard/provider");
+    }
+
+
 
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder

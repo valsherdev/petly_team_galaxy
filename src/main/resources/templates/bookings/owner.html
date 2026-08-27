@@ -39,6 +39,33 @@
     </section>
 
     <hr />
+
+    <section>
+        <h2>Declined Requests</h2>
+        <table th:if="${not #lists.isEmpty(declinedBookings)}">
+            <thead>
+            <tr>
+                <th>Service</th>
+                <th>Pet</th>
+                <th>Service Provider</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${declinedBookings}">
+                <td th:text="${booking.service.name}"></td>
+                <td th:text="${booking.pet.name}"></td>
+                <td th:text="${booking.provider.name}"></td>
+                <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(declinedBookings)}">No declined requests.</p>
+    </section>
+
+    <hr />
     <section>
         <h2>Upcoming Bookings</h2>
         <table th:if="${not #lists.isEmpty(confirmedBookings)}">

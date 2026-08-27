@@ -104,6 +104,12 @@
                     <strong>Location:</strong> <span th:text="${service.location}"></span>
                 </p>
 
+                <a th:href="@{/services/{id}/edit(id=${service.id})}">Edit</a>
+                <form th:action="@{/services/{id}/delete(id=${service.id})}" method="POST" style="display:inline;"
+                      onsubmit="return confirm('Delete this service? This will also delete any bookings made for it.');">
+                    <button type="submit">Delete</button>
+                </form>
+
                 <hr />
             </article>
         </div>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Service - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
+
+<main>
+    <section>
+        <h1>Edit Service</h1>
+        <form th:action="@{/services/{id}/update(id=${service.id})}" th:object="${service}" method="POST">
+
+            <div>
+                <label for="name">Name of Your Service:</label>
+                <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required />
+            </div>
+
+            <br />
+
+            <div>
+                <label for="type">Category:</label>
+                <select id="type" th:field="*{type}" required>
+                    <option value="" disabled>Select a Category</option>
+                    <option value="PET_CARE">Pet Care</option>
+                    <option value="GROOMING">Grooming</option>
+                    <option value="VETERINARY">Veterinary</option>
+                </select>
+            </div>
+            <br />
+
+            <div>
+                <label for="duration">Duration (in minutes, optional):</label>
+                <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1" />
+            </div>
+            <br />
+
+            <div>
+                <label for="price">Price (£):</label>
+                <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required />
+            </div>
+
+            <br />
+
+            <div>
+                <label for="priceUnit">Price Unit:</label>
+                <select id="priceUnit" th:field="*{priceUnit}" required>
+                    <option value="PER_HOUR">per hour</option>
+                    <option value="PER_DAY">per day</option>
+                    <option value="FIXED">fixed</option>
+                </select>
+            </div>
+
+            <br />
+
+            <div>
+                <label for="location">Location:</label>
+                <input type="text" id="location" th:field="*{location}" placeholder="e.g. Central London" />
+            </div>
+
+            <br />
+
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" th:field="*{description}" rows="4" cols="50" placeholder="Describe your service..." required></textarea>
+            </div>
+
+            <br />
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>
