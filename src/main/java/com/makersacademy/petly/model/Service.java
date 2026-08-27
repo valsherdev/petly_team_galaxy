@@ -19,8 +19,11 @@ public class Service {
     private BigDecimal price;
     private String priceUnit;
     private String location;
+    private Double latitude;
+    private Double longitude;
     private String description;
     private Duration duration;
+    private String adminDistrict;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
