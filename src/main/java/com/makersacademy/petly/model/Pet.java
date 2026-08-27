@@ -21,6 +21,19 @@ public class Pet {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    public Pet() {}
+    public Pet() {
+    }
+
+    public Pet(Long id, String name, String type, String breed, Integer age, String description, String photo, User owner) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.breed = breed;
+        this.age = age;
+        this.description = description;
+        this.photo = photo;
+        this.owner = owner;
+    }
 }
+
 
