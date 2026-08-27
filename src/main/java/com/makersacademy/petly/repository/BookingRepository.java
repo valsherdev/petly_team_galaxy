@@ -9,4 +9,5 @@ public interface BookingRepository extends CrudRepository<Booking, Long> {
     List<Booking> findByServiceId(Long serviceId);
     List<Booking> findByOwnerId(Long ownerId);
     List<Booking> findByProviderId(Long providerId);
+    List<Booking> findByProviderIdAndStatus(Long providerId, String status);
 }
