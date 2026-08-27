@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
+<main>
+    <h1>My Bookings</h1>
+
+    <hr />
+    <section>
+        <h2>Pending Requests</h2>
+        <table th:if="${not #lists.isEmpty(pendingBookings)}">
+            <thead>
+            <tr>
+                <th>Service</th>
+                <th>Pet</th>
+                <th>Service Provider</th>
+                <th>Start</th>
+                <th>End</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${pendingBookings}">
+                <td th:text="${booking.service.name}"></td>
+                <td th:text="${booking.pet.name}"></td>
+                <td th:text="${booking.provider.name}"></td>
+                <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(pendingBookings)}">No pending requests.</p>
+    </section>
+
+    <hr />
+
+    <section>
+        <h2>Declined Requests</h2>
+        <table th:if="${not #lists.isEmpty(declinedBookings)}">
+            <thead>
+            <tr>
+                <th>Service</th>
+                <th>Pet</th>
+                <th>Service Provider</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${declinedBookings}">
+                <td th:text="${booking.service.name}"></td>
+                <td th:text="${booking.pet.name}"></td>
+                <td th:text="${booking.provider.name}"></td>
+                <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(declinedBookings)}">No declined requests.</p>
+    </section>
+
+    <hr />
+    <section>
+        <h2>Upcoming Bookings</h2>
+        <table th:if="${not #lists.isEmpty(confirmedBookings)}">
+            <thead>
+            <tr>
+                <th>Service</th>
+                <th>Pet</th>
+                <th>Service Provider</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${confirmedBookings}">
+                <td th:text="${booking.service.name}"></td>
+                <td th:text="${booking.pet.name}"></td>
+                <td th:text="${booking.provider.name}"></td>
+                <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(confirmedBookings)}">No confirmed bookings yet.</p>
+    </section>
+</main>
+</body>
+</html>
