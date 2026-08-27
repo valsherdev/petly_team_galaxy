@@ -1,5 +1,6 @@
 package com.makersacademy.petly.controller;
 
+import com.makersacademy.petly.service.ImageStorageService;
 import com.makersacademy.petly.model.Pet;
 import com.makersacademy.petly.model.User;
 import com.makersacademy.petly.repository.PetRepository;
@@ -12,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,11 +26,16 @@ public class PetController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private ImageStorageService imageStorageService;
+
+
     @GetMapping("/my-pets")
     public String getMyPetsPage(Model model) {
         List<Pet> pets = petRepository.findByOwnerId(getCurrentUser().getId());
 
         model.addAttribute("pets", pets);
+        model.addAttribute("imageUrl", pets.getFirst().getPhoto());
         return "pets/my-pets";
     }
 
@@ -45,17 +50,16 @@ public class PetController {
     @PostMapping("/my-pets/add")
     public String savePetProfile(
             @ModelAttribute("pet") Pet petForm,
-            @RequestParam(value = "imageFile", required = false)
-            MultipartFile imageFile) {
-
+            @RequestParam(value = "image", required = false)
+            MultipartFile image) throws IOException {
 
         Pet pet = new Pet();
 
-//            if (imageFile != null && !imageFile.isEmpty()) {
-//                byte[] compressedImage =
-//                        imageService.compressImage(imageFile);
-//                profile.setProfilePicture(compressedImage);
-//            }
+          if (!image.isEmpty()) {
+            String imageUrl = imageStorageService.upload(image);
+            pet.setPhoto(imageUrl);
+        }
+
         pet.setName(petForm.getName());
         pet.setType(petForm.getType());
         pet.setBreed(petForm.getBreed());
@@ -96,6 +100,16 @@ public class PetController {
         }
         return "redirect:/my-pets";
     }
+
+    @PostMapping("/my-pets/{id}/delete")
+    public String deletePet(@PathVariable Long id) {
+
+        Pet pet = petRepository.findById(id).orElseThrow();
+        petRepository.delete(pet);
+
+        return "redirect:/my-pets";
+    }
+
 
 
     private User getCurrentUser() {
