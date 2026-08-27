@@ -107,6 +107,19 @@ public class BookingController {
     }
 
 
+    @GetMapping("/dashboard/owner/bookings")
+    public String ownerBookings(Model model) {
+        User owner = getCurrentUser();
+
+        List<Booking> pendingBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "PENDING");
+        List<Booking> confirmedBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "CONFIRMED");
+
+        model.addAttribute("pendingBookings", pendingBookings);
+        model.addAttribute("confirmedBookings", confirmedBookings);
+        return "bookings/owner";
+    }
+
+
     @PostMapping("/bookings/{id}/approve")
     public RedirectView approveBooking(@PathVariable Long id) {
         Booking booking = bookingRepository.findById(id).orElseThrow();

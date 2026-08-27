@@ -5,14 +5,7 @@
   <title>Booking Requests - Petly</title>
 </head>
 <body>
-<header>
-  <nav>
-    <strong>Petly</strong> |
-    <a th:href="@{/dashboard/provider}">Dashboard</a> |
-    <a th:href="@{/dashboard/provider/bookings}">Booking Requests</a> |
-    <a th:href="@{/logout}">Logout</a>
-  </nav>
-</header>
+<div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
 <main>
   <h1>Booking Requests</h1>
 
@@ -53,7 +46,7 @@
 
   <hr />
   <section>
-    <h2>Upcoming Confirmed Bookings</h2>
+    <h2>Upcoming Bookings</h2>
     <table th:if="${not #lists.isEmpty(confirmedBookings)}">
       <thead>
       <tr>
