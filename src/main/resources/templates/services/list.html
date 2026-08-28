@@ -41,8 +41,9 @@
                           th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>
                 </p>
 
-                <p th:if="${service.location != null and !#strings.isEmpty(service.location)}">
-                    <strong>Location:</strong> <span th:text="${service.location}"></span>
+                <p th:if="${distances.containsKey(service.id)}">
+                    <strong>Distance:</strong>
+                    <span th:text="${#numbers.formatDecimal(distances.get(service.id), 1, 1)} + ' km away from your location'"></span>
                 </p>
 
                 <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>

@@ -4,6 +4,8 @@ import com.makersacademy.petly.model.Service;
 import com.makersacademy.petly.model.User;
 import com.makersacademy.petly.repository.ServiceRepository;
 import com.makersacademy.petly.repository.UserRepository;
+import com.makersacademy.petly.PostcodeService;
+import com.makersacademy.petly.DistanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.Map;
+import java.util.HashMap;
 
 import java.util.List;
 
@@ -23,20 +28,86 @@ public class ServiceController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostcodeService postcodeService;
+
+    @Autowired
+    private DistanceService distanceService;
+
     @GetMapping("/services")
     public String listServices(@RequestParam(required = false) String type, Model model) {
+
+        User user = getCurrentUser();
         List<Service> services = (type == null || type.isBlank())
                 ? (List<Service>) serviceRepository.findAll()
                 : serviceRepository.findByType(type);
 
+        Map<Long, Double> distances = new HashMap<>();
+
+        if (user.getLatitude() != null && user.getLongitude() != null) {
+
+            for (Service service : services) {
+
+                if (service.getLatitude() != null && service.getLongitude() != null) {
+
+                    double distance = distanceService.calculateDistance(
+                            user.getLatitude(),
+                            user.getLongitude(),
+                            service.getLatitude(),
+                            service.getLongitude()
+                    );
+
+                    distances.put(service.getId(), distance);
+                }
+            }
+
+            services.sort((service1, service2) -> {
+
+                Double distance1 = distances.get(service1.getId());
+                Double distance2 = distances.get(service2.getId());
+
+                if (distance1 == null && distance2 == null) {
+                    return 0;
+                }
+
+                if (distance1 == null) {
+                    return 1;
+                }
+
+                if (distance2 == null) {
+                    return -1;
+                }
+
+                return Double.compare(distance1, distance2);
+            });
+        }
+
         model.addAttribute("services", services);
         model.addAttribute("selectedType", type);
+        model.addAttribute("user", user);
+        model.addAttribute("distances", distances);
         return "services/list";
     }
 
     @PostMapping("/services/create")
-    public RedirectView createService(@ModelAttribute Service service) {
+    public RedirectView createService(@ModelAttribute Service service, RedirectAttributes redirectAttributes) {
         User user = getCurrentUser();
+
+        boolean validPostcode = postcodeService.setCoordinates(service);
+
+        if (!validPostcode) {
+            redirectAttributes.addFlashAttribute(
+                    "postcodeError",
+                    "Please input a valid postcode"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "newService",
+                    service
+            );
+
+            return new RedirectView("/dashboard/provider");
+        }
         service.setProvider(user);
         serviceRepository.save(service);
         return new RedirectView("/dashboard/provider");
@@ -54,7 +125,7 @@ public class ServiceController {
     }
 
     @PostMapping("/services/{id}/update")
-    public RedirectView updateService(@PathVariable Long id, @ModelAttribute Service updatedService) {
+    public RedirectView updateService(@PathVariable Long id, @ModelAttribute Service updatedService, RedirectAttributes redirectAttributes) {
         Service service = serviceRepository.findById(id).orElseThrow();
         User provider = getCurrentUser();
         if (!service.getProvider().getId().equals(provider.getId())) {
@@ -68,6 +139,17 @@ public class ServiceController {
         service.setLocation(updatedService.getLocation());
         service.setDescription(updatedService.getDescription());
         service.setDurationMinutes(updatedService.getDurationMinutes());
+        boolean validPostcode = postcodeService.setCoordinates(service);
+
+
+        if (!validPostcode) {
+            redirectAttributes.addFlashAttribute(
+                    "postcodeError",
+                    "Please input a valid postcode"
+            );
+
+            return new RedirectView("/services/" + id + "/edit");
+        }
         serviceRepository.save(service);
 
         return new RedirectView("/dashboard/provider");

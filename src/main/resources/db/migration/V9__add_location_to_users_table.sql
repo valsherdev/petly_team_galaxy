@@ -1,0 +1,4 @@
+ALTER TABLE users
+    ADD COLUMN location VARCHAR(50),
+    ADD COLUMN latitude DOUBLE PRECISION,
+    ADD COLUMN longitude DOUBLE PRECISION;
