@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +35,12 @@ public class PetController {
     public String getMyPetsPage(Model model) {
         List<Pet> pets = petRepository.findByOwnerId(getCurrentUser().getId());
 
+        if (pets == null) {
+            pets = Collections.emptyList();
+        }
+
         model.addAttribute("pets", pets);
-        model.addAttribute("imageUrl", pets.getFirst().getPhoto());
+
         return "pets/my-pets";
     }
 
@@ -84,12 +89,17 @@ public class PetController {
     @PostMapping("/my-pets/{id}/edit")
     public String updatePetProfile(@PathVariable Long id,
                                    @ModelAttribute Pet petForm,
-                                   @RequestParam(value = "imageFile", required = false)
-                                   MultipartFile imageFile) {
+                                   @RequestParam(value = "image", required = false)
+                                   MultipartFile image) throws IOException {
 
         Optional<Pet> pet = petRepository.findById(id);
         if (pet.isPresent()) {
             Pet existingPet = pet.get();
+
+        if (!image.isEmpty()) {
+            String imageUrl = imageStorageService.upload(image);
+            existingPet.setPhoto(imageUrl);
+        }
 
             existingPet.setName(petForm.getName());
             existingPet.setType(petForm.getType());

@@ -18,39 +18,35 @@
             Manage your pets or add a new companion.
         </p>
     </div>
-    <!--    <a href="/my-pets/add">Add a pet</a>-->
 
-    <div th:if="${pets.empty}">
-        <p>You haven't added any pets to your profile</p>
+    <div th:if="${pets == null or #lists.isEmpty(pets)}" class="contents justify-center items-center w-full">
+        <p class="pb-8 font-bold text-2xl justify-self-[anchor-center]">You haven't added any pets to your profile</p>
+
+        <a th:href="@{/my-pets/add}"
+           class="justify-self-[anchor-center] w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
+
+            <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+            </div>
+            <h4 class="text-lg font-bold text-gray-800 group-hover:text-emerald-700 transition-colors">Add A Pet</h4>
+            <p class="text-xs text-gray-500 mt-1">Register a new profile for your pet</p>
+        </a>
+
     </div>
 
-<!--    <div th:each="pet : ${pets}">-->
-<!--        Name: <span th:text="${pet.name}">Name</span>-->
-<!--        Type: <span th:text="${pet.type}">Type</span>-->
-<!--        Breed: <span th:text="${pet.breed}">Breed</span>-->
-<!--        Age: <span th:text="${pet.age}">Age</span>-->
-<!--        Description: <span th:text="${pet.description}">Description</span>-->
-
-<!--        <a th:href="@{/my-pets/{id}/edit(id=${pet.id})}">Edit</a>-->
-<!--    </div>-->
-
-<!--    <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">-->
-<!--        <div>-->
-<!--            <p class="text-gray-500 text-sm mt-1">Manage your registered pets or add a new companion.</p>-->
-<!--        </div>-->
-<!--        <a th:href="@{/my-pets/add}"-->
-<!--           class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-sm transition-all hover:shadow-md cursor-pointer text-sm">-->
-<!--            + Add a Pet-->
-<!--        </a>-->
-<!--    </div>-->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-start">
+    <div th:if="${pets != null and !#lists.isEmpty(pets)}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-start">
 
         <div th:each="pet : ${pets}" class="w-72 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 flex flex-col justify-between">
 
             <div>
                 <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400 font-medium">
-<!--                    <span>Image Placeholder</span>-->
-                    <img th:src="${pet.photo}" alt="Image" class="w-full h-full object-cover object-center">
+                    <img th:if="${pet.photo != null and !pet.photo.isEmpty()}"
+                         th:src="${pet.photo}" th:alt="${pet.name}" class="w-full h-full object-cover object-center">
+
+                    <img th:unless="${pet.photo != null and !pet.photo.isEmpty()}"
+                         th:src="@{/images/animal_default.jpeg}" th:alt="${pet.name}" class="w-full h-full object-cover object-center">
                 </div>
 
                 <div class="p-6">
@@ -80,27 +76,28 @@
                     <form th:action="@{/my-pets/{id}/delete(id=${pet.id})}" method="post" class="w-full" onclick="return confirm('Are you sure you want to delete this pet?')">
                         <button type="submit"
                                 class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded-md border border-gray-200 cursor-pointer transition-colors">
-                            Delete
+                            Remove
                         </button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <a th:href="@{/my-pets/add}"
-           class="w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
+        <div th:if="${pets != null and !#lists.isEmpty(pets)}">
+            <a th:href="@{/my-pets/add}"
+               class="w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
 
-            <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-            </div>
-            <h4 class="text-lg font-bold text-gray-800 group-hover:text-emerald-700 transition-colors">Add Another Pet</h4>
-            <p class="text-xs text-gray-500 mt-1">Register a new profile for your pet</p>
-        </a>
+                <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <h4 class="text-lg font-bold text-gray-800 group-hover:text-emerald-700 transition-colors">Add Another Pet</h4>
+                <p class="text-xs text-gray-500 mt-1">Register a new profile for your pet</p>
+            </a>
+        </div>
 
     </div>
-
 
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
