@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import com.makersacademy.petly.model.Message;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,8 +69,23 @@ public class MessageController {
         model.addAttribute("currentUserId", currentUser.getId());
         model.addAttribute("user", currentUser);
 
-        return "messages/show";
+        return "/messages/show";
     }
+
+    @PostMapping("/messages/{userId}")
+    public RedirectView send(@PathVariable Long userId, @RequestParam String content) {
+        if (content == null || content.isBlank()) {
+            return new RedirectView("/messages/" + userId);
+        }
+
+        User currentUser = getCurrentUser();
+        User recipient = userRepository.findById(userId).orElseThrow();
+
+        messageRepository.save(new Message(currentUser, recipient, content));
+
+        return new RedirectView("/messages/" + userId);
+    }
+
 
 
     private User getCurrentUser() {
