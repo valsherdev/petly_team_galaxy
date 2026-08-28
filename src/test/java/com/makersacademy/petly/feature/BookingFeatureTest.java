@@ -116,9 +116,34 @@ public class BookingFeatureTest {
 
     }
 
+    private void setDateTimeLocal(WebElement input, String isoValue) {
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].value = arguments[1];" +
+                        "arguments[0].dispatchEvent(new Event('change'));",
+                input, isoValue);
+    }
+
     @Test
     public void ownerCanRequestBookingForDurationBasedService() {
 
+        Long providerId = insertProvider(faker.name().username() + "@email.com", "Test Provider");
+        Long serviceId = insertService(providerId, "Grooming " + faker.number().digits(6), "GROOMING", 60);
+
+        String ownerEmail = faker.name().username() + "@email.com";
+        Long ownerId = signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
+        Long petId = insertPet(ownerId, "Rex");
+
+        driver.get("http://localhost:8081/services/" + serviceId + "/book");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startTime")));
+
+        new Select(driver.findElement(By.id("petId"))).selectByValue(petId.toString());
+        setDateTimeLocal(driver.findElement(By.id("startTime")), "2027-01-15T10:00");
+        driver.findElement(By.cssSelector("form[action='/bookings/create'] button[type='submit']")).click();
+
+        wait.until(ExpectedConditions.urlContains("/dashboard/owner"));
+
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> assertEquals(1, bookingCountFor(serviceId, ownerId, "PENDING")));
     }
 
 }
