@@ -118,7 +118,7 @@ public class BookingFeatureTest {
 
     @Test
     public void ownerCanRequestBookingForDurationBasedService() {
-      
+
     }
 
 }
