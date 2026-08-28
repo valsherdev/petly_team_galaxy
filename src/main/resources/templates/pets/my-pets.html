@@ -22,7 +22,7 @@
     <div th:if="${pets == null or #lists.isEmpty(pets)}" class="contents justify-center items-center w-full">
         <p class="pb-8 font-bold text-2xl justify-self-[anchor-center]">You haven't added any pets to your profile</p>
 
-        <a th:href="@{/my-pets/add}"
+        <a th:href="@{/my-pets/add}" data-testid="add-a-pet-btn"
            class="justify-self-[anchor-center] w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
 
             <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">
@@ -36,7 +36,7 @@
 
     </div>
 
-    <div th:if="${pets != null and !#lists.isEmpty(pets)}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-start">
+    <div th:if="${pets != null and !#lists.isEmpty(pets)}" data-testid="pet-card" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-start">
 
         <div th:each="pet : ${pets}" class="w-72 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 flex flex-col justify-between">
 
@@ -69,12 +69,12 @@
 
             <div>
                 <div class="px-6 pb-4 grid grid-cols-2 gap-3">
-                    <a th:href="@{/my-pets/{id}/edit(id=${pet.id})}"
+                    <a th:href="@{/my-pets/{id}/edit(id=${pet.id})}" data-testid="update-pet-btn"
                        class="inline-block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-md">
                         Update
                     </a>
                     <form th:action="@{/my-pets/{id}/delete(id=${pet.id})}" method="post" class="w-full" onclick="return confirm('Are you sure you want to delete this pet?')">
-                        <button type="submit"
+                        <button data-testid="remove-pet-btn" type="submit"
                                 class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded-md border border-gray-200 cursor-pointer transition-colors">
                             Remove
                         </button>
@@ -84,7 +84,7 @@
         </div>
 
         <div th:if="${pets != null and !#lists.isEmpty(pets)}">
-            <a th:href="@{/my-pets/add}"
+            <a th:href="@{/my-pets/add}" data-testid="add-another-pet-btn"
                class="w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
 
                 <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">
