@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
+<main>
+    <section>
+        <h1>My Profile</h1>
+        <p>
+            <strong>Name:</strong>
+            <span th:text="${user.name}"></span>
+        </p>
+        <p>
+            <strong>Email:</strong>
+            <span th:text="${user.username}"></span>
+        </p>
+    </section>
+    <hr>
+    <section>
+        <h2>Your Location</h2>
+        <form th:action="@{/profile/location}" method="POST">
+            <div>
+                <label for="location">Postcode:</label>
+                <input type="text" id="location" th:field="*{user.location}" placeholder="e.g. SW1A 1AA" required/>
+            </div>
+            <p th:if="${postcodeError}" th:text="${postcodeError}"></p>
+            <p th:if="${locationSuccess}" th:text="${locationSuccess}"></p>
+            <button type="submit">Save Location</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

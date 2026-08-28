@@ -41,7 +41,8 @@ public class HomeController {
 		List<Service> services = serviceRepository.findByProvider(user);
 		model.addAttribute("user", user);
 		model.addAttribute("services", services);
-		model.addAttribute("newService", new Service());
+		if (!model.containsAttribute("newService")) {
+		model.addAttribute("newService", new Service());}
 		return "dashboards/provider";
 	}
 
