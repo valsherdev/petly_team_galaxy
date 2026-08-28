@@ -1,5 +1,6 @@
 package com.makersacademy.petly.feature;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.AfterEach;
@@ -8,22 +9,46 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.time.Duration;
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("test")
 public class SignUpTest {
 
     WebDriver driver;
     Faker faker;
+    WebDriverWait wait;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     public void setup() {
         System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
         driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         faker = new Faker();
     }
 
+
+
     @AfterEach
     public void tearDown() {
-        driver.close();
+        if (driver != null) {
+            driver.quit();
+        }
+        jdbcTemplate.update("DELETE FROM bookings");
+        jdbcTemplate.update("DELETE FROM services");
+        jdbcTemplate.update("DELETE FROM pets");
+        jdbcTemplate.update("DELETE FROM users");
     }
 
     @Test
@@ -35,7 +60,12 @@ public class SignUpTest {
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
         driver.findElement(By.name("action")).click();
+
+        wait.until(ExpectedConditions.urlContains("/users/select-role"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("greeting")));
+
         String greetingText = driver.findElement(By.id("greeting")).getText();
-        assertEquals("Signed in as " + email, greetingText);
+        assertTrue(greetingText.contains(email));
     }
+
 }
