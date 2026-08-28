@@ -1,4 +1,4 @@
-package com.makersacademy.petly;
+package com.makersacademy.petly.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;

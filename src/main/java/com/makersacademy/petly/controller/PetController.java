@@ -1,5 +1,6 @@
 package com.makersacademy.petly.controller;
 
+import com.makersacademy.petly.service.ImageStorageService;
 import com.makersacademy.petly.model.Pet;
 import com.makersacademy.petly.model.User;
 import com.makersacademy.petly.repository.PetRepository;
@@ -12,9 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +27,20 @@ public class PetController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private ImageStorageService imageStorageService;
+
+
     @GetMapping("/my-pets")
     public String getMyPetsPage(Model model) {
         List<Pet> pets = petRepository.findByOwnerId(getCurrentUser().getId());
 
+        if (pets == null) {
+            pets = Collections.emptyList();
+        }
+
         model.addAttribute("pets", pets);
+
         return "pets/my-pets";
     }
 
@@ -45,17 +55,16 @@ public class PetController {
     @PostMapping("/my-pets/add")
     public String savePetProfile(
             @ModelAttribute("pet") Pet petForm,
-            @RequestParam(value = "imageFile", required = false)
-            MultipartFile imageFile) {
-
+            @RequestParam(value = "image", required = false)
+            MultipartFile image) throws IOException {
 
         Pet pet = new Pet();
 
-//            if (imageFile != null && !imageFile.isEmpty()) {
-//                byte[] compressedImage =
-//                        imageService.compressImage(imageFile);
-//                profile.setProfilePicture(compressedImage);
-//            }
+          if (!image.isEmpty()) {
+            String imageUrl = imageStorageService.upload(image);
+            pet.setPhoto(imageUrl);
+        }
+
         pet.setName(petForm.getName());
         pet.setType(petForm.getType());
         pet.setBreed(petForm.getBreed());
@@ -80,12 +89,17 @@ public class PetController {
     @PostMapping("/my-pets/{id}/edit")
     public String updatePetProfile(@PathVariable Long id,
                                    @ModelAttribute Pet petForm,
-                                   @RequestParam(value = "imageFile", required = false)
-                                   MultipartFile imageFile) {
+                                   @RequestParam(value = "image", required = false)
+                                   MultipartFile image) throws IOException {
 
         Optional<Pet> pet = petRepository.findById(id);
         if (pet.isPresent()) {
             Pet existingPet = pet.get();
+
+        if (!image.isEmpty()) {
+            String imageUrl = imageStorageService.upload(image);
+            existingPet.setPhoto(imageUrl);
+        }
 
             existingPet.setName(petForm.getName());
             existingPet.setType(petForm.getType());
@@ -96,6 +110,16 @@ public class PetController {
         }
         return "redirect:/my-pets";
     }
+
+    @PostMapping("/my-pets/{id}/delete")
+    public String deletePet(@PathVariable Long id) {
+
+        Pet pet = petRepository.findById(id).orElseThrow();
+        petRepository.delete(pet);
+
+        return "redirect:/my-pets";
+    }
+
 
 
     private User getCurrentUser() {
