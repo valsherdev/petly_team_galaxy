@@ -36,7 +36,6 @@ public class PostcodeService {
             service.setLocation(response.getResult().getPostcode());
             service.setLatitude(response.getResult().getLatitude());
             service.setLongitude(response.getResult().getLongitude());
-            service.setAdminDistrict(response.getResult().getAdminDistrict());
 
             return true;
 
@@ -91,7 +90,6 @@ public class PostcodeService {
         private String postcode;
         private Double latitude;
         private Double longitude;
-        private String adminDistrict; /* 'adminDistrict' is what our API calls cities */
 
         public String getPostcode() {
             return postcode;
@@ -115,14 +113,6 @@ public class PostcodeService {
 
         public void setLongitude(Double longitude) {
             this.longitude = longitude;
-        }
-
-        public String getAdminDistrict() {
-            return adminDistrict;
-        }
-
-        public void setAdminDistrict(String adminDistrict) {
-            this.adminDistrict = adminDistrict;
         }
     }
 }

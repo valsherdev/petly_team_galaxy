@@ -41,10 +41,6 @@
                           th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>
                 </p>
 
-                <p th:if="${service.adminDistrict != null and !#strings.isEmpty(service.adminDistrict)}">
-                    <strong>Location:</strong> <span th:text="${service.adminDistrict}"></span>
-                </p>
-
                 <p th:if="${distances.containsKey(service.id)}">
                     <strong>Distance:</strong>
                     <span th:text="${#numbers.formatDecimal(distances.get(service.id), 1, 1)} + ' km away from your location'"></span>

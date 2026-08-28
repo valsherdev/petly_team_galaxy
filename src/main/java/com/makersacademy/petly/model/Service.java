@@ -23,7 +23,6 @@ public class Service {
     private Double longitude;
     private String description;
     private Duration duration;
-    private String adminDistrict;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
