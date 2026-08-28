@@ -1,38 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>My Profile - Petly</title>
     <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body class="flex flex-col h-lvh bg-gray-50">
 <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
-<main>
-    <section>
-        <h1>My Profile</h1>
-        <p>
-            <strong>Name:</strong>
-            <span th:text="${user.name}"></span>
-        </p>
-        <p>
-            <strong>Email:</strong>
-            <span th:text="${user.username}"></span>
-        </p>
-    </section>
-    <hr>
-    <section>
-        <h2>Your Location</h2>
-        <form th:action="@{/profile/location}" method="POST">
+<div class="flex flex-col items-center justify-start pt-8 pb-12 px-4 flex-grow max-w-4xl mx-auto w-full">
+    <section class="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-8">
+            My Profile
+        </h1>
+        <div class="space-y-5">
             <div>
-                <label for="location">Postcode:</label>
-                <input type="text" id="location" th:field="*{user.location}" placeholder="e.g. SW1A 1AA" required/>
+                <label class="block text-xs font-semibold text-gray-400 mb-1 ml-1">
+                    NAME
+                </label>
+                <p class="text-lg font-semibold text-gray-800 ml-1"
+                   th:text="${user.name}">
+                </p>
             </div>
-            <p th:if="${postcodeError}" th:text="${postcodeError}"></p>
-            <p th:if="${locationSuccess}" th:text="${locationSuccess}"></p>
-            <button type="submit">Save Location</button>
-        </form>
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 mb-1 ml-1">
+                    EMAIL
+                </label>
+                <p class="text-lg font-semibold text-gray-800 ml-1"
+                   th:text="${user.username}">
+                </p>
+            </div>
+        </div>
+        <div class="mt-8 pt-6 border-t border-gray-100">
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                Your Location
+            </h2>
+            <form th:action="@{/profile/location}" method="POST" class="space-y-5">
+                <div>
+                    <label for="location" class="block text-xs font-semibold text-gray-400 mb-1 ml-3">
+                        POSTCODE
+                    </label>
+                    <input
+                            type="text" id="location" th:field="*{user.location}" placeholder="e.g. SW1A 1AA" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm font-medium text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    >
+                </div>
+                <p
+                        th:if="${postcodeError}" th:text="${postcodeError}"
+                        class="text-sm font-medium text-red-700 ml-3">
+                </p>
+                <p
+                        th:if="${locationSuccess}" th:text="${locationSuccess}"
+                        class="text-sm font-medium text-emerald-700 ml-3">
+                </p>
+                <div class="pt-2">
+                    <button
+                            type="submit"
+                            class="w-full bg-emerald-600 text-white font-bold py-3.5 rounded-full hover:bg-emerald-700 shadow-md text-sm transition-colors cursor-pointer"
+                    >
+                        Save Location
+                    </button>
+                </div>
+            </form>
+        </div>
     </section>
-</main>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
