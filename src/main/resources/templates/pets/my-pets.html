@@ -52,10 +52,10 @@
 
             <div>
                 <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400 font-medium">
-                    <img th:if="${pet.photo != null and !pet.photo.isEmpty()}"
+                    <img data-testid="pet-image" th:if="${pet.photo != null and !pet.photo.isEmpty()}"
                          th:src="${pet.photo}" th:alt="${pet.name}" class="w-full h-full object-cover object-center">
 
-                    <img th:unless="${pet.photo != null and !pet.photo.isEmpty()}"
+                    <img data-testid="pet-image" th:unless="${pet.photo != null and !pet.photo.isEmpty()}"
                          th:src="@{/images/animal_default.jpeg}" th:alt="${pet.name}" class="w-full h-full object-cover object-center">
                 </div>
 

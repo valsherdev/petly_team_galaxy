@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.File;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -99,7 +102,7 @@ public class PetFeatureTest {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='add-a-pet-btn']")));
 
         String pageText = driver.findElement(By.tagName("body")).getText();
-        assertTrue(pageText.contains("You haven't added any pets to your profile"));
+        assertTrue(pageText.contains("\uD83D\uDC36 No pets registered yet"));
     }
 
     @Test
@@ -124,6 +127,7 @@ public class PetFeatureTest {
 
         wait.until(ExpectedConditions.urlContains("/my-pets"));
 
+        WebElement petCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='pet-card']")));
         String pageText = driver.findElement(By.cssSelector("[data-testid='pet-card']")).getText();
         assertTrue(pageText.contains("Patrick"));
     }
@@ -148,6 +152,7 @@ public class PetFeatureTest {
 
         wait.until(ExpectedConditions.urlContains("/my-pets"));
 
+        WebElement petCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='pet-card']")));
         String pageText = driver.findElement(By.cssSelector("[data-testid='pet-card']")).getText();
         assertTrue(pageText.contains("Ben"));
     }
@@ -166,5 +171,34 @@ public class PetFeatureTest {
         wait.until(ExpectedConditions.alertIsPresent()).accept();
         boolean isDeleted = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("[data-testid='pet-card']")));
         assertTrue(isDeleted);
+    }
+
+    @Test
+    public void ownerCanAddImageToPetProfile() {
+
+        String ownerEmail = faker.name().username() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
+        insertPet();
+
+        driver.get("http://localhost:8081/my-pets");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='add-another-pet-btn']")));
+
+        driver.findElement(By.cssSelector("[data-testid='update-pet-btn']")).click();
+        wait.until(ExpectedConditions.urlContains("/my-pets/1/edit"));
+
+        File testImageFile = new File("src/test/resources/cat.jpeg");
+        String imagePath = testImageFile.getAbsolutePath();
+
+        driver.findElement(By.cssSelector("[data-testid='pet-image']")).sendKeys(imagePath);
+        driver.findElement(By.cssSelector("[data-testid='save-changes-btn']")).click();
+
+        wait.until(ExpectedConditions.urlContains("/my-pets"));
+
+        WebElement petCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='pet-card']")));
+        WebElement petImage = petCard.findElement(By.cssSelector("[data-testid='pet-image']"));
+        assertTrue(petImage.isDisplayed());
+        String imageSrc = petImage.getAttribute("src");
+        assertNotNull(imageSrc);
+        assertFalse(imageSrc.isEmpty());
     }
 }
