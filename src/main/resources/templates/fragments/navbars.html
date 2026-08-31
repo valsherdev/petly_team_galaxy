@@ -35,6 +35,10 @@
                 <a href="/dashboard/owner/bookings" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">My Bookings</a>
                 <a href="/services" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Services</a>
                 <a href="/profile" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">My Profile</a>
+                <a href="/messages" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">
+                    Messages
+                    <span th:if="${unreadMessageCount > 0}" th:text="'(' + ${unreadMessageCount} + ')'"></span>
+                </a>
             </div>
             <div sec:authorize="isAuthenticated()" id="greeting" class="inline-flex items-center gap-3 bg-emerald-50 border border-emerald-200/80 px-4 py-2 rounded-full shadow-sm text-xs sm:text-sm font-semibold text-slate-700">
                 <div class="flex items-center gap-1.5">
@@ -63,6 +67,10 @@
 <!--                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Service Profile</a>-->
                 <a href="/dashboard/provider" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Dashboard</a>
                 <a href="/dashboard/provider/bookings" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Booking Requests</a>
+                <a href="/messages" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">
+                    Messages
+                    <span th:if="${unreadMessageCount > 0}" th:text="'(' + ${unreadMessageCount} + ')'"></span>
+                </a>
             </div>
             <div sec:authorize="isAuthenticated()" id="greeting" class="inline-flex items-center gap-3 bg-[#cad5ed]/40 border border-[#7794d1]/40 px-4 py-2 rounded-full shadow-sm text-xs sm:text-sm font-semibold text-slate-700">
                 <div class="flex items-center gap-1.5">

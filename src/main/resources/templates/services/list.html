@@ -144,5 +144,14 @@
     </main>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+                <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>
+                <a th:href="@{/messages/{id}(id=${service.provider.id})}">Send a message</a>
+
+                <hr/>
+            </article>
+        </div>
+        <p th:if="${#lists.isEmpty(services)}">No services found.</p>
+    </section>
+</main>
 </body>
 </html>
