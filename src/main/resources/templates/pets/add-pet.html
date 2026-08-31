@@ -19,20 +19,20 @@
     <div>
       <label class="block text-xs font-semibold text-gray-400 mb-1 ml-3">PHOTO</label>
       <label class="block w-full bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm font-medium text-gray-500 cursor-pointer hover:bg-slate-100">
-        <input type="file" name="image" accept="image/*" class="file:hidden">
+        <input data-testid="photo" type="file" name="image" accept="image/*" class="file:hidden">
         <span class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-2 rounded-full shadow-sm">Select File</span>
        </label>
     </div>
 
     <div>
       <label class="block text-xs font-semibold text-gray-400 mb-1 ml-3">NAME</label>
-      <input type="text" th:field="*{name}" required
+      <input data-testid="name" type="text" th:field="*{name}" required
              class="w-full bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-emerald-500">
     </div>
 
     <div>
       <label class="block text-xs font-semibold text-gray-400 mb-1 ml-3">TYPE</label>
-      <input type="text" th:field="*{type}" list="pet-types" placeholder="Select from dropdown or type if not listed (e.g. Snake)" required
+      <input data-testid="type" type="text" th:field="*{type}" list="pet-types" placeholder="Select from dropdown or type if not listed (e.g. Snake)" required
              class="w-full bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-emerald-500">
 
         <datalist id="pet-types">
@@ -46,27 +46,27 @@
 
       <div>
         <label class="block text-xs font-semibold text-gray-400 mb-1 ml-3">AGE (YEARS)</label>
-        <input type="number" th:field="*{age}" required
+        <input data-testid="age" type="number" th:field="*{age}" required
                class="w-full bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-emerald-500">
       </div>
 
 
     <div>
       <label class="block text-xs font-semibold text-gray-400 mb-1 ml-3">BREED</label>
-      <input type="text" th:field="*{breed}" required
+      <input data-testid="breed" type="text" th:field="*{breed}" required
              class="w-full bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-emerald-500">
     </div>
 
     <div>
       <label class="block text-xs font-semibold text-gray-400 mb-1 ml-3">DESCRIPTION</label>
-      <textarea th:field="*{description}" rows="3" placeholder="E.g. Neutered, fully vaccinated, very playful, sensitive stomach..."
+      <textarea data-testid="description" th:field="*{description}" rows="3" placeholder="E.g. Neutered, fully vaccinated, very playful, sensitive stomach..."
                 class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-emerald-500 resize-none"></textarea>
     </div>
 
     <div class="pt-4 flex gap-3">
-      <button type="submit" class="flex-1 bg-emerald-600 text-white font-bold py-3.5 rounded-full hover:bg-emerald-700 shadow-md text-sm">Add pet</button>
+      <button data-testid="submit-pet-btn" type="submit" class="flex-1 bg-emerald-600 text-white font-bold py-3.5 rounded-full hover:bg-emerald-700 shadow-md text-sm">Add pet</button>
       <button type="reset" value="reset" class="px-6 py-3.5 bg-slate-100 text-gray-600 font-bold rounded-full hover:bg-slate-200 text-center text-sm border border-slate-200">Reset</button>
-      <a th:href="@{/my-pets}" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold rounded-full text-sm border border-slate-200">Cancel</a>
+      <a th:href="@{/my-pets}" data-testid="cancel-pet-btn" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold rounded-full text-sm border border-slate-200">Cancel</a>
     </div>
 
   </form>
