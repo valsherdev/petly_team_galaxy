@@ -58,7 +58,13 @@
           <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Your conversations and booking inquiries.</p>
         </div>
       </div>
-
+      <a th:href="@{${user.role == 'SERVICE_PROVIDER'} ? '/dashboard/provider' : '/dashboard/owner'}"
+         class="self-start md:self-auto text-xs font-bold bg-white border px-4 py-3 rounded-2xl transition-all shadow-sm flex items-center gap-1.5 shrink-0"
+         th:classappend="${user.role == 'SERVICE_PROVIDER'}
+     ? 'text-slate-700 hover:text-[#7794d1] border-[#cad5ed] hover:bg-[#cad5ed]/20'
+     : 'text-slate-700 hover:text-emerald-800 border-emerald-200 hover:bg-emerald-50/50'">
+        ← Back to Dashboard
+      </a>
     </div>
   </section>
 
