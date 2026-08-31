@@ -9,11 +9,14 @@
                 </a>
             </div>
 
-            <div class="grid grid-cols-[1fr_auto] gap-4 items-center">
-                <div class="text-sm font-semibold text-gray-700 grid grid-flow-col justify-end" sec:authorize="isAuthenticated()" id="greeting">
-                    Signed is as <span class="pl-1" sec:authentication="principal.attributes['email']"></span>
+            <div sec:authorize="isAuthenticated()" id="greeting" class="inline-flex items-center gap-3 bg-slate-100 border border-slate-200 px-4 py-2 rounded-full shadow-sm text-xs sm:text-sm font-semibold text-slate-700">
+                <div class="flex items-center gap-1.5">
+                    <span>Signed in as <strong class="text-slate-900 font-bold" sec:authentication="principal.attributes['email']"></strong></span>
                 </div>
-                <a href="/logout" class="w-max px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Logout</a>
+                <span class="text-slate-300">|</span>
+                <a href="/logout" class="text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 px-2.5 py-1 rounded-full flex items-center gap-1 transition-colors">
+                    Logout →
+                </a>
             </div>
 
         </div>
