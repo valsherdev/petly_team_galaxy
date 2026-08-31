@@ -45,6 +45,7 @@ public class BookingFeatureTest {
         if (driver != null) {
             driver.quit();
         }
+        jdbcTemplate.update("DELETE FROM messages");
         jdbcTemplate.update("DELETE FROM bookings");
         jdbcTemplate.update("DELETE FROM services");
         jdbcTemplate.update("DELETE FROM pets");
@@ -144,6 +145,62 @@ public class BookingFeatureTest {
 
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> assertEquals(1, bookingCountFor(serviceId, ownerId, "PENDING")));
+    }
+
+    @Test
+    public void bookingFailsWhenSlotTaken() {
+        Long providerId = insertProvider(faker.name().username() + "@email.com", "Test Provider");
+        Long serviceId = insertService(providerId, "Vet Visit " + faker.number().digits(6), "VETERINARY", 30);
+
+        Long otherOwnerId = insertProvider(faker.name().username() + "@email.com", "Other Owner");
+        Long otherPetId = insertPet(otherOwnerId, "Buddy");
+        insertBooking(otherPetId, serviceId, otherOwnerId, providerId,
+                "2027-02-10 09:00:00", "2027-02-10 09:30:00", "CONFIRMED");
+
+        String ownerEmail = faker.name().username() + "@email.com";
+        Long ownerId = signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
+        Long petId = insertPet(ownerId, "Milo");
+
+        driver.get("http://localhost:8081/services/" + serviceId + "/book");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startTime")));
+
+        new Select(driver.findElement(By.id("petId"))).selectByValue(petId.toString());
+
+        setDateTimeLocal(driver.findElement(By.id("startTime")), "2027-02-10T09:15");
+        driver.findElement(By.cssSelector("form[action='/bookings/create'] button[type='submit']")).click();
+
+        wait.until(ExpectedConditions.urlContains("error=conflict"));
+
+        assertTrue(driver.getCurrentUrl().contains("error=conflict"));
+        assertEquals(0, bookingCountFor(serviceId, ownerId, "PENDING"));
+    }
+
+    @Test
+    public void providerCanApprovePendingRequest() {
+        String providerEmail = faker.name().username() + "@email.com";
+        Long providerId = signUpAs(providerEmail, "SERVICE_PROVIDER", "Test Provider");
+        Long serviceId = insertService(providerId, "Boarding " + faker.number().digits(6), "PET_CARE", null);
+
+        Long ownerId = insertProvider(faker.name().username() + "@email.com", "Test Owner");
+        Long petId = insertPet(ownerId, "Rex");
+        insertBooking(petId, serviceId, ownerId, providerId,
+                "2027-03-01 09:00:00", "2027-03-03 09:00:00", "PENDING");
+
+        Long bookingId = jdbcTemplate.queryForObject(
+                "SELECT id FROM bookings WHERE service_id = ? AND owner_id = ?",
+                Long.class, serviceId, ownerId);
+
+        driver.get("http://localhost:8081/dashboard/provider/bookings");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
+
+        driver.findElement(
+                By.cssSelector("form[action='/bookings/" + bookingId + "/approve'] button")).click();
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            String status = jdbcTemplate.queryForObject(
+                    "SELECT status FROM bookings WHERE id = ?", String.class, bookingId);
+            assertEquals("CONFIRMED", status);
+        });
     }
 
 }
