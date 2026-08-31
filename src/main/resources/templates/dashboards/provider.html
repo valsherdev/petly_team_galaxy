@@ -9,7 +9,7 @@
 <body>
 <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
 
-<main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+<main class="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
     <header class="bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6">
         <h1 class="text-3xl font-bold text-slate-800">
@@ -18,8 +18,8 @@
         <p class="text-xs font-medium text-slate-500 mt-1">Manage your active listings and add new services.</p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <aside class="lg:col-span-4 bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6 lg:sticky lg:top-6">
+    <div class="grid grid-cols-1 lg:grid-cols-8 gap-6 items-start">
+        <aside class="lg:col-span-3 bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6 lg:sticky lg:top-6">
             <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-[#cad5ed]">Add a Service</h2>
 
             <form th:action="@{/services/create}" th:object="${newService}" method="POST" class="space-y-3.5">
@@ -83,10 +83,10 @@
             </form>
         </aside>
 
-        <section class="lg:col-span-8 bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6">
+        <section class="lg:col-span-5 bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6">
             <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-[#cad5ed]">My Services</h2>
 
-            <div th:if="${not #lists.isEmpty(services)}" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div th:if="${not #lists.isEmpty(services)}" class="grid grid-cols-1 gap-4">
                 <article th:each="service : ${services}" class="bg-white/90 rounded-2xl border border-[#cad5ed] p-4 flex flex-col justify-between">
                     <div>
                         <div class="flex items-start justify-between gap-2 mb-1">
