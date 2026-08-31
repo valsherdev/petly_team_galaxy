@@ -8,52 +8,6 @@
 <body>
 <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 
-<!--<main>-->
-<!--    <section>-->
-<!--        <h1>Browse Services</h1>-->
-
-<!--        <nav>-->
-<!--            <a th:href="@{/services}">All</a> |-->
-<!--            <a th:href="@{/services(type='PET_CARE')}">Pet Care</a> |-->
-<!--            <a th:href="@{/services(type='GROOMING')}">Grooming</a> |-->
-<!--            <a th:href="@{/services(type='VETERINARY')}">Veterinary</a>-->
-<!--        </nav>-->
-<!--    </section>-->
-
-<!--<hr/>-->
-
-<!--    <section>-->
-<!--        <div th:if="${not #lists.isEmpty(services)}">-->
-<!--            <article th:each="service : ${services}">-->
-<!--                <h3 th:text="${service.name}"></h3>-->
-<!--                <p th:text="'Provided by ' + ${service.provider.name}"></p>-->
-<!--                <p th:text="${service.description}"></p>-->
-
-<!--                <p>-->
-<!--                    <strong>Duration:</strong>-->
-<!--                    <span th:text="${service.durationMinutes} != null ? ${service.durationMinutes} + ' mins' : 'Flexible'"></span>-->
-<!--                </p>-->
-
-<!--                <p>-->
-<!--                    <strong>Price:</strong>-->
-<!--                    £<span th:text="${service.price}"></span>-->
-<!--                    <span th:if="${service.priceUnit != null and service.priceUnit != 'FIXED'}"-->
-<!--                          th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>-->
-<!--                </p>-->
-
-<!--                <p th:if="${distances.containsKey(service.id)}">-->
-<!--                    <strong>Distance:</strong>-->
-<!--                    <span th:text="${#numbers.formatDecimal(distances.get(service.id), 1, 1)} + ' km away from your location'"></span>-->
-<!--                </p>-->
-
-<!--                <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>-->
-
-<!--                <hr/>-->
-<!--            </article>-->
-<!--        </div>-->
-<!--        <p th:if="${#lists.isEmpty(services)}">No services found.</p>-->
-<!--    </section>-->
-<!--</main>-->
 <div class="flex flex-col min-h-screen">
     <main class="flex-1 flex flex-col flex-grow w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 
@@ -128,8 +82,12 @@
                         </div>
 
                         <a th:href="@{/services/{id}/book(id=${service.id})}"
-                           class="w-full inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-4 rounded-full shadow-sm hover:shadow transition-all cursor-pointer">
+                           class="mb-3 w-full inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-4 rounded-full shadow-sm hover:shadow transition-all cursor-pointer">
                             Book this service
+                        </a>
+                        <a th:href="@{/messages/{id}(id=${service.provider.id})}"
+                           class="w-full inline-flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm py-3 px-4 rounded-full shadow-sm hover:shadow transition-all cursor-pointer">
+                            Send a message
                         </a>
                     </div>
                 </article>
@@ -144,14 +102,5 @@
     </main>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
-                <a th:href="@{/services/{id}/book(id=${service.id})}">Book this service</a>
-                <a th:href="@{/messages/{id}(id=${service.provider.id})}">Send a message</a>
-
-                <hr/>
-            </article>
-        </div>
-        <p th:if="${#lists.isEmpty(services)}">No services found.</p>
-    </section>
-</main>
 </body>
 </html>
