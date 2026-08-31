@@ -5,8 +5,119 @@
     <title>Pet Owner Dashboard</title>
     <link rel="stylesheet" href="/css/output.css">
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
-<h2>Browse services near you</h2>
+
+<div class="flex flex-col min-h-screen">
+    <main class="flex-1 flex flex-col flex-grow w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
+
+    <header class="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-white border border-emerald-200/80 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-800">
+                Welcome back, <span th:text="${user.name}" class="text-[#009866]"></span>!
+            </h1>
+            <p class="text-base font-medium text-slate-500 mt-1">Dashboard for your pets, bookings, and services.</p>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
+                    <h2 class="font-bold text-slate-800 text-lg">🐶 My Pets</h2>
+                    <a th:href="@{/my-pets}" class="text-sm font-semibold text-emerald-600 hover:underline">All →</a>
+                </div>
+                <div th:if="${pets != null and !#lists.isEmpty(pets)}" class="space-y-2.5">
+                    <div th:each="pet, iter : ${pets}" th:if="${iter.index < 2}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
+                        <span class="font-bold text-slate-800" th:text="${pet.name}"></span>
+                        <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold capitalize text-xs" th:text="${pet.type}"></span>
+                    </div>
+                </div>
+                <div th:if="${pets == null or #lists.isEmpty(pets)}" class="text-center py-3.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+                    <p class="text-sm font-medium text-slate-500">No pets added.</p>
+                </div>
+            </div>
+            <a th:href="@{/my-pets/add}" class="w-full text-center bg-[#009866] hover:bg-emerald-700 text-white font-bold text-sm py-2.5 rounded-xl transition-all shadow-sm mt-4">
+                + Add Pet
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
+                    <h2 class="font-bold text-slate-800 text-lg">📅 My Bookings</h2>
+                    <a th:href="@{/dashboard/owner/bookings}" class="text-sm font-semibold text-emerald-600 hover:underline">All →</a>
+                </div>
+                <div th:if="${bookings != null and !#lists.isEmpty(bookings)}" class="space-y-2.5">
+                    <div th:each="booking, iter : ${bookings}" th:if="${iter.index < 2}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
+                        <span class="font-bold text-slate-800 truncate" th:text="${booking.service.name}"></span>
+
+                        <span th:switch="${#strings.toLowerCase(booking.status)}" class="font-semibold capitalize text-xs">
+                                <span th:case="'confirmed'" class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Confirmed</span>
+                                <span th:case="'pending'" class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Pending</span>
+                                <span th:case="'cancelled'" class="bg-rose-100 text-rose-800 px-3 py-1 rounded-full">Cancelled</span>
+                                <span th:case="*" class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full" th:text="${booking.status}"></span>
+                            </span>
+                    </div>
+                </div>
+                <div th:if="${bookings == null or #lists.isEmpty(bookings)}" class="text-center py-3.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+                    <p class="text-sm font-medium text-slate-500">No active bookings.</p>
+                </div>
+            </div>
+            <a th:href="@{/dashboard/owner/bookings}" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
+                View Bookings
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
+                    <h2 class="font-bold text-slate-800 text-lg"> ✂️ Services</h2>
+                    <a th:href="@{/services}" class="text-sm font-semibold text-emerald-600 hover:underline">Browse →</a>
+                </div>
+                <div th:if="${services != null and !#lists.isEmpty(services)}" class="space-y-2.5">
+                    <div th:each="service, iter : ${services}" th:if="${iter.index < 2}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
+                        <span class="font-bold text-slate-800 truncate" th:text="${service.name}"></span>
+                        <span class="font-bold text-emerald-700 text-base" th:text="'£' + ${service.price}"></span>
+                    </div>
+                </div>
+                <div th:if="${services == null or #lists.isEmpty(services)}" class="text-center py-3.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+                    <p class="text-sm font-medium text-slate-500">No services found.</p>
+                </div>
+            </div>
+            <a th:href="@{/services}" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
+                Explore Services
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
+                    <h2 class="font-bold text-slate-800 text-lg">👤 Account Details</h2>
+                    <a th:href="@{/profile}" class="text-sm font-semibold text-emerald-600 hover:underline">Edit →</a>
+                </div>
+                <div class="space-y-2.5 text-base">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 font-bold">NAME</span>
+                        <span class="font-bold text-slate-800" th:text="${user.name}"></span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 font-bold">LOCATION</span>
+                        <span class="font-bold text-slate-800" th:text="${user.location != null and !user.location.isEmpty()} ? ${user.location} : 'Not set'"></span>
+                    </div>
+                </div>
+            </div>
+            <a th:href="@{/profile}" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
+                Manage Profile
+            </a>
+        </div>
+
+    </div>
+
+</main>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

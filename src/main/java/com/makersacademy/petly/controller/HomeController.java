@@ -1,7 +1,11 @@
 package com.makersacademy.petly.controller;
 
+import com.makersacademy.petly.model.Booking;
+import com.makersacademy.petly.model.Pet;
 import com.makersacademy.petly.model.Service;
 import com.makersacademy.petly.model.User;
+import com.makersacademy.petly.repository.BookingRepository;
+import com.makersacademy.petly.repository.PetRepository;
 import com.makersacademy.petly.repository.ServiceRepository;
 import com.makersacademy.petly.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,12 @@ public class HomeController {
 	@Autowired
 	private ServiceRepository serviceRepository;
 
+	@Autowired
+	private PetRepository petRepository;
+
+	@Autowired
+	private BookingRepository bookingRepository;
+
 	@RequestMapping(value = "/")
 	public RedirectView index() {
 		return new RedirectView("/users/after-login");
@@ -31,7 +41,13 @@ public class HomeController {
 
 	@GetMapping("/dashboard/owner")
 	public String ownerDashboard(Model model) {
+		Iterable<Pet> pets = petRepository.findAll();
+		Iterable<Service> services = serviceRepository.findAll();
+		Iterable<Booking> bookings = bookingRepository.findAll();
 		model.addAttribute("user", getCurrentUser());
+		model.addAttribute("pets", pets);
+		model.addAttribute("services", services);
+		model.addAttribute("bookings", bookings);
 		return "dashboards/owner";
 	}
 

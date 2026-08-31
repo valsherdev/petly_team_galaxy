@@ -3,72 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <title>Booking Requests - Petly</title>
+  <link rel="stylesheet" href="/css/output.css">
 </head>
 <body>
 <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
-<main>
-  <h1>Booking Requests</h1>
 
-  <hr />
-  <section>
-    <h2>Pending Requests</h2>
-    <table th:if="${not #lists.isEmpty(pendingBookings)}">
-      <thead>
-      <tr>
-        <th>Service</th>
-        <th>Pet</th>
-        <th>Owner</th>
-        <th>Start</th>
-        <th>End</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="booking : ${pendingBookings}">
-        <td th:text="${booking.service.name}"></td>
-        <td th:text="${booking.pet.name}"></td>
-        <td th:text="${booking.owner.name}"></td>
-        <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
-        <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
-        <td>
-          <form th:action="@{/bookings/{id}/approve(id=${booking.id})}" method="POST" style="display:inline;">
-            <button type="submit">Approve</button>
-          </form>
-          <form th:action="@{/bookings/{id}/decline(id=${booking.id})}" method="POST" style="display:inline;">
-            <button type="submit">Decline</button>
-          </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <p th:if="${#lists.isEmpty(pendingBookings)}">No pending requests.</p>
+<main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+  <section class="bg-gradient-to-r from-[#cad5ed]/40 via-[#cad5ed]/20 to-white rounded-2xl shadow-sm border border-[#cad5ed] p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-bold text-slate-800">Booking Requests</h1>
+      <p class="text-xs font-medium text-slate-500 mt-1">Review pending customer requests and manage upcoming scheduled services.</p>
+    </div>
+    <a th:href="@{/dashboard/provider}" class="self-start md:self-auto text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-[#cad5ed] px-4 py-2.5 rounded-xl shadow-sm hover:shadow">
+      ← Back to Dashboard
+    </a>
   </section>
 
-  <hr />
-  <section>
-    <h2>Upcoming Bookings</h2>
-    <table th:if="${not #lists.isEmpty(confirmedBookings)}">
-      <thead>
-      <tr>
-        <th>Service</th>
-        <th>Pet</th>
-        <th>Owner</th>
-        <th>Start</th>
-        <th>End</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="booking : ${confirmedBookings}">
-        <td th:text="${booking.service.name}"></td>
-        <td th:text="${booking.pet.name}"></td>
-        <td th:text="${booking.owner.name}"></td>
-        <td th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
-        <td th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
-      </tr>
-      </tbody>
-    </table>
-    <p th:if="${#lists.isEmpty(confirmedBookings)}">No confirmed bookings yet.</p>
+  <section class="bg-slate-50/80 rounded-2xl shadow-sm border border-[#cad5ed] p-6 md:p-8">
+    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#cad5ed]">
+      <div class="w-2.5 h-6 rounded-full bg-amber-400"></div>
+      <h2 class="text-xl font-bold text-slate-800">Pending Requests</h2>
+      <span th:if="${not #lists.isEmpty(pendingBookings)}"
+            class="ml-auto text-xs font-bold text-[#7794d1] bg-[#cad5ed]/40 border border-[#cad5ed] px-3 py-1 rounded-full"
+            th:text="${#lists.size(pendingBookings)} + ' pending'"></span>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(pendingBookings)}" class="overflow-x-auto rounded-xl border border-[#cad5ed] bg-white shadow-sm">
+      <table class="w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-slate-100/70 border-b border-[#cad5ed] text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <th class="py-3.5 px-4">Service</th>
+          <th class="py-3.5 px-4">Pet</th>
+          <th class="py-3.5 px-4">Owner</th>
+          <th class="py-3.5 px-4">Start Time</th>
+          <th class="py-3.5 px-4">End Time</th>
+          <th class="py-3.5 px-4 text-right">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
+        <tr th:each="booking : ${pendingBookings}" class="hover:bg-slate-50/80">
+          <td class="py-4 px-4 font-semibold text-slate-900" th:text="${booking.service.name}"></td>
+          <td class="py-4 px-4" th:text="${booking.pet.name}"></td>
+          <td class="py-4 px-4 text-slate-600" th:text="${booking.owner.name}"></td>
+          <td class="py-4 px-4 text-xs font-medium text-slate-600" th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+          <td class="py-4 px-4 text-xs font-medium text-slate-600" th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <form th:action="@{/bookings/{id}/approve(id=${booking.id})}" method="POST" class="inline">
+                <button type="submit"
+                        class="bg-[#7794d1] hover:bg-[#5e7bb8] text-white font-semibold text-xs py-1.5 px-3.5 rounded-lg shadow-sm cursor-pointer">
+                  Approve
+                </button>
+              </form>
+              <form th:action="@{/bookings/{id}/decline(id=${booking.id})}" method="POST" class="inline"
+                    onsubmit="return confirm('Decline this booking request?');">
+                <button type="submit"
+                        class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold text-xs py-1.5 px-3.5 rounded-lg border border-rose-200 cursor-pointer">
+                  Decline
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(pendingBookings)}" class="bg-white rounded-xl border border-dashed border-[#cad5ed] p-8 text-center">
+      <p class="text-slate-400 text-sm italic">No pending requests at the moment.</p>
+    </div>
+  </section>
+
+  <section class="bg-slate-50/80 rounded-2xl shadow-sm border border-[#cad5ed] p-6 md:p-8">
+    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#cad5ed]">
+      <div class="w-2.5 h-6 rounded-full bg-emerald-500"></div>
+      <h2 class="text-xl font-bold text-slate-800">Upcoming Bookings</h2>
+      <span th:if="${not #lists.isEmpty(confirmedBookings)}"
+            class="ml-auto text-xs font-bold text-slate-600 bg-slate-200/60 border border-slate-300 px-3 py-1 rounded-full"
+            th:text="${#lists.size(confirmedBookings)} + ' confirmed'"></span>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(confirmedBookings)}" class="overflow-x-auto rounded-xl border border-[#cad5ed] bg-white shadow-sm">
+      <table class="w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-slate-100/70 border-b border-[#cad5ed] text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <th class="py-3.5 px-4">Service</th>
+          <th class="py-3.5 px-4">Pet</th>
+          <th class="py-3.5 px-4">Owner</th>
+          <th class="py-3.5 px-4">Start Time</th>
+          <th class="py-3.5 px-4">End Time</th>
+          <th class="py-3.5 px-4 text-center">Status</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
+        <tr th:each="booking : ${confirmedBookings}" class="hover:bg-slate-50/80">
+          <td class="py-4 px-4 font-semibold text-slate-900" th:text="${booking.service.name}"></td>
+          <td class="py-4 px-4" th:text="${booking.pet.name}"></td>
+          <td class="py-4 px-4 text-slate-600" th:text="${booking.owner.name}"></td>
+          <td class="py-4 px-4 text-xs font-medium text-slate-600" th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+          <td class="py-4 px-4 text-xs font-medium text-slate-600" th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+          <td class="py-4 px-4 text-center">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-[#007a55b3] border border-[#007a55b3] uppercase tracking-wider">
+              Confirmed
+            </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(confirmedBookings)}" class="bg-white rounded-xl border border-dashed border-[#cad5ed] p-8 text-center">
+      <p class="text-slate-400 text-sm italic">No confirmed bookings yet.</p>
+    </div>
   </section>
 </main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -8,70 +8,158 @@
 <body>
 <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
 
-<main>
-    <section>
-        <h1>Edit Service</h1>
-        <form th:action="@{/services/{id}/update(id=${service.id})}" th:object="${service}" method="POST">
+<!--<main>-->
+<!--    <section>-->
+<!--        <h1>Edit Service</h1>-->
+<!--        <form th:action="@{/services/{id}/update(id=${service.id})}" th:object="${service}" method="POST">-->
 
-            <div>
-                <label for="name">Name of Your Service:</label>
-                <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required />
+<!--            <div>-->
+<!--                <label for="name">Name of Your Service:</label>-->
+<!--                <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required />-->
+<!--            </div>-->
+
+<!--            <br />-->
+
+<!--            <div>-->
+<!--                <label for="type">Category:</label>-->
+<!--                <select id="type" th:field="*{type}" required>-->
+<!--                    <option value="" disabled>Select a Category</option>-->
+<!--                    <option value="PET_CARE">Pet Care</option>-->
+<!--                    <option value="GROOMING">Grooming</option>-->
+<!--                    <option value="VETERINARY">Veterinary</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <br />-->
+
+<!--            <div>-->
+<!--                <label for="duration">Duration (in minutes, optional):</label>-->
+<!--                <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1" />-->
+<!--            </div>-->
+<!--            <br />-->
+
+<!--            <div>-->
+<!--                <label for="price">Price (£):</label>-->
+<!--                <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required />-->
+<!--            </div>-->
+
+<!--            <br />-->
+
+<!--            <div>-->
+<!--                <label for="priceUnit">Price Unit:</label>-->
+<!--                <select id="priceUnit" th:field="*{priceUnit}" required>-->
+<!--                    <option value="PER_HOUR">per hour</option>-->
+<!--                    <option value="PER_DAY">per day</option>-->
+<!--                    <option value="FIXED">fixed</option>-->
+<!--                </select>-->
+<!--            </div>-->
+
+<!--            <br />-->
+
+<!--            <div>-->
+<!--                <label for="location">Postcode:</label>-->
+<!--                <input type="text" id="location" th:field="*{location}" placeholder="e.g. SW1A 1AA" required />-->
+<!--            </div>-->
+
+<!--            <br />-->
+
+<!--            <div>-->
+<!--                <label for="description">Description:</label>-->
+<!--                <textarea id="description" th:field="*{description}" rows="4" cols="50" placeholder="Describe your service..." required></textarea>-->
+<!--            </div>-->
+
+<!--            <br />-->
+
+<!--            <button type="submit">Save Changes</button>-->
+<!--        </form>-->
+<!--    </section>-->
+<!--</main>-->
+
+<main class="max-w-4xl mx-auto px-4 py-8 space-y-6">
+
+    <section class="bg-gradient-to-r from-[#cad5ed]/40 via-[#cad5ed]/20 to-white rounded-2xl shadow-sm border border-[#cad5ed] p-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-800">Edit Service</h1>
+            <p class="text-xs font-medium text-slate-500 mt-1">Update your existing service listing details below.</p>
+        </div>
+        <a th:href="@{/dashboard/provider}" class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-[#cad5ed] px-3 py-2 rounded-xl transition-all shadow-sm">
+            ← Back to Dashboard
+        </a>
+    </section>
+
+    <section class="bg-slate-50/80 rounded-2xl shadow-sm border border-[#cad5ed] p-6 md:p-8">
+        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#cad5ed]">
+            <h2 class="text-xl font-bold text-slate-800" th:text="${service.name}">Service Details</h2>
+        </div>
+
+        <form th:action="@{/services/{id}/update(id=${service.id})}" th:object="${service}" method="POST" class="space-y-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Name of Your Service</label>
+                    <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required
+                           class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400" />
+                </div>
+
+                <div>
+                    <label for="type" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category</label>
+                    <select id="type" th:field="*{type}" required
+                            class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all">
+                        <option value="" disabled>Select a Category</option>
+                        <option value="PET_CARE">Pet Care</option>
+                        <option value="GROOMING">Grooming</option>
+                        <option value="VETERINARY">Veterinary</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="duration" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Duration (in minutes, optional)</label>
+                    <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1"
+                           class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400" />
+                </div>
+
+                <div>
+                    <label for="price" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Price (£)</label>
+                    <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required
+                           class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400" />
+                </div>
+
+                <div>
+                    <label for="priceUnit" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Price Unit</label>
+                    <select id="priceUnit" th:field="*{priceUnit}" required
+                            class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all">
+                        <option value="PER_HOUR">per hour</option>
+                        <option value="PER_DAY">per day</option>
+                        <option value="FIXED">fixed</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="location" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Postcode</label>
+                    <input type="text" id="location" th:field="*{location}" placeholder="e.g. SW1A 1AA" required
+                           class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400" />
+                    <p th:if="${postcodeError}" th:text="${postcodeError}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+                </div>
             </div>
 
-            <br />
-
             <div>
-                <label for="type">Category:</label>
-                <select id="type" th:field="*{type}" required>
-                    <option value="" disabled>Select a Category</option>
-                    <option value="PET_CARE">Pet Care</option>
-                    <option value="GROOMING">Grooming</option>
-                    <option value="VETERINARY">Veterinary</option>
-                </select>
-            </div>
-            <br />
-
-            <div>
-                <label for="duration">Duration (in minutes, optional):</label>
-                <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1" />
-            </div>
-            <br />
-
-            <div>
-                <label for="price">Price (£):</label>
-                <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required />
+                <label for="description" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Description</label>
+                <textarea id="description" th:field="*{description}" rows="4" placeholder="Describe your service..." required
+                          class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400"></textarea>
             </div>
 
-            <br />
-
-            <div>
-                <label for="priceUnit">Price Unit:</label>
-                <select id="priceUnit" th:field="*{priceUnit}" required>
-                    <option value="PER_HOUR">per hour</option>
-                    <option value="PER_DAY">per day</option>
-                    <option value="FIXED">fixed</option>
-                </select>
+            <div class="flex items-center gap-4 pt-2">
+                <button type="submit"
+                        class="bg-[#7794d1] hover:bg-[#5e7bb8] text-white font-semibold text-sm py-3 px-8 rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer">
+                    Save Changes
+                </button>
+                <a th:href="@{/dashboard/provider}"
+                   class="bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm py-3 px-6 rounded-xl border border-[#cad5ed] transition-all">
+                    Cancel
+                </a>
             </div>
-
-            <br />
-
-            <div>
-                <label for="location">Postcode:</label>
-                <input type="text" id="location" th:field="*{location}" placeholder="e.g. SW1A 1AA" required />
-            </div>
-
-            <br />
-
-            <div>
-                <label for="description">Description:</label>
-                <textarea id="description" th:field="*{description}" rows="4" cols="50" placeholder="Describe your service..." required></textarea>
-            </div>
-
-            <br />
-
-            <button type="submit">Save Changes</button>
         </form>
     </section>
 </main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

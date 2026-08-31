@@ -36,12 +36,14 @@
                 <a href="/services" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Services</a>
                 <a href="/profile" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">My Profile</a>
             </div>
-
-            <div class="grid grid-cols-[1fr_auto] gap-4 items-center">
-                <div class="text-sm font-semibold text-gray-700 grid grid-flow-col justify-end" sec:authorize="isAuthenticated()" id="greeting">
-                    Signed is as <span class="pl-1" sec:authentication="principal.attributes['email']"></span>
+            <div sec:authorize="isAuthenticated()" id="greeting" class="inline-flex items-center gap-3 bg-emerald-50 border border-emerald-200/80 px-4 py-2 rounded-full shadow-sm text-xs sm:text-sm font-semibold text-slate-700">
+                <div class="flex items-center gap-1.5">
+                    <span>Signed in as <strong class="text-emerald-900 font-bold" sec:authentication="principal.attributes['email']"></strong></span>
                 </div>
-                <a href="/logout" class="w-max px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Logout</a>
+                <span class="text-emerald-200">|</span>
+                <a href="/logout" class="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100/70 px-2.5 py-1 rounded-full flex items-center gap-1">
+                    Logout →
+                </a>
             </div>
         </div>
     </div>
@@ -52,22 +54,24 @@
         <div class="flex items-center justify-between h-16">
 
             <div class="flex-shrink-0 flex items-center">
-                <a href="/" class="text-2xl font-extrabold tracking-tight text-emerald-600 hover:text-emerald-700 flex items-center gap-2">
+                <a href="/" class="text-2xl font-extrabold tracking-tight text-[#7794d1] hover:text-[#cad5ed80]flex items-center gap-2">
                     <span>🐾</span> Petly
                 </a>
             </div>
 
             <div class="flex items-center space-x-4">
-                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Service Profile</a>
+<!--                <a href="#" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Service Profile</a>-->
                 <a href="/dashboard/provider" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Dashboard</a>
                 <a href="/dashboard/provider/bookings" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Booking Requests</a>
             </div>
-
-            <div class="grid grid-cols-[1fr_auto] gap-4 items-center">
-                <div class="text-sm font-semibold text-gray-700 grid grid-flow-col justify-end" sec:authorize="isAuthenticated()" id="greeting">
-                    Signed is as <span class="pl-1" sec:authentication="principal.attributes['email']"></span>
+            <div sec:authorize="isAuthenticated()" id="greeting" class="inline-flex items-center gap-3 bg-[#cad5ed]/40 border border-[#7794d1]/40 px-4 py-2 rounded-full shadow-sm text-xs sm:text-sm font-semibold text-slate-700">
+                <div class="flex items-center gap-1.5">
+                    <span>Signed in as <strong class="text-slate-900 font-bold" sec:authentication="principal.attributes['email']"></strong></span>
                 </div>
-                <a href="/logout" class="w-max px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900">Logout</a>
+                <span class="text-[#7794d1]/50">|</span>
+                <a href="/logout" class="text-slate-800 hover:text-white bg-[#cad5ed]/60 hover:bg-[#7794d1] px-3 py-1 rounded-full flex items-center gap-1">
+                    Logout →
+                </a>
             </div>
         </div>
     </div>
