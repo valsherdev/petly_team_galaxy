@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Chat with ' + ${otherUser.name}">Messages</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body>
+<div th:if="${user.role == 'SERVICE_PROVIDER'}">
+    <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
+</div>
+<div th:if="${user.role == 'PET_OWNER'}">
+    <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
+</div>
+
+<main>
+    <a th:href="@{/messages}">&larr; Back to messages</a>
+
+    <h1 th:text="'Conversation with ' + ${otherUser.name}"></h1>
+
+    <div>
+        <div th:each="message : ${messages}">
+            <strong th:text="${message.sender.name}"></strong>
+            <span th:text="${message.content}"></span>
+            <span th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}"></span>
+        </div>
+        <p th:if="${messages.isEmpty()}">No messages yet - say hello!</p>
+
+        <div id="bottom-anchor"></div>
+    </div>
+
+    <form th:action="@{'/messages/' + ${otherUser.id} + '#bottom-anchor'}" method="post">
+        <input type="text" name="content" placeholder="Write a message..." required/>
+        <button type="submit">Send</button>
+    </form>
+</main>
+</body>
+</html>
