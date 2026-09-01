@@ -113,11 +113,13 @@ public class BookingController {
 
         List<Booking> pendingBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "PENDING");
         List<Booking> declinedBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "DECLINED");
-        List<Booking> confirmedBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "CONFIRMED");
+        List<Booking> confirmedBookings = bookingRepository.findByOwnerIdAndStatusAndEndTimeAfter(owner.getId(), "CONFIRMED", LocalDateTime.now());
+        List<Booking> pastBookings = bookingRepository.findByOwnerIdAndStatusAndEndTimeBefore(owner.getId(), "CONFIRMED", LocalDateTime.now());
 
         model.addAttribute("pendingBookings", pendingBookings);
         model.addAttribute("declinedBookings", declinedBookings);
         model.addAttribute("confirmedBookings", confirmedBookings);
+        model.addAttribute("pastBookings", pastBookings);
         return "bookings/owner";
     }
 
