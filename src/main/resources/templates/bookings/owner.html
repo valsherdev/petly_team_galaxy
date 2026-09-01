@@ -52,7 +52,8 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
-                <tr th:each="booking : ${pendingBookings}" class="hover:bg-amber-50/20 transition-colors">
+                <tr th:each="booking : ${pendingBookings}" class="hover:bg-amber-50/20 transition-colors"
+                    th:attr="data-testid='booking-row-' + ${booking.id}">>
                     <td class="py-4 px-4 font-bold text-slate-900" th:text="${booking.service.name}"></td>
                     <td class="py-4 px-4" th:text="${booking.pet.name}"></td>
                     <td class="py-4 px-4 text-slate-600" th:text="${booking.provider.name}"></td>
