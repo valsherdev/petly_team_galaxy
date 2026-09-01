@@ -45,6 +45,7 @@ public class SignUpTest {
         if (driver != null) {
             driver.quit();
         }
+        jdbcTemplate.update("DELETE FROM messages");
         jdbcTemplate.update("DELETE FROM bookings");
         jdbcTemplate.update("DELETE FROM services");
         jdbcTemplate.update("DELETE FROM pets");
