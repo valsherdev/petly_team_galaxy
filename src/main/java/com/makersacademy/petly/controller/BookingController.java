@@ -91,7 +91,7 @@ public class BookingController {
 
         Booking booking = new Booking(pet, service, start, end, owner,service.getProvider());
         bookingRepository.save(booking);
-        return new RedirectView("/dashboard/owner");
+        return new RedirectView("/dashboard/owner/bookings");
     }
 
     @GetMapping("/dashboard/provider/bookings")
@@ -99,10 +99,12 @@ public class BookingController {
         User provider = getCurrentUser();
 
         List<Booking> pendingBookings = bookingRepository.findByProviderIdAndStatus(provider.getId(), "PENDING");
-        List<Booking> confirmedBookings = bookingRepository.findByProviderIdAndStatus(provider.getId(), "CONFIRMED");
+        List<Booking> upcomingBookings = bookingRepository.findByProviderIdAndStatusAndEndTimeAfter(provider.getId(), "CONFIRMED", LocalDateTime.now());
+        List<Booking> pastBookings = bookingRepository.findByProviderIdAndStatusAndEndTimeBefore(provider.getId(), "CONFIRMED", LocalDateTime.now());
 
         model.addAttribute("pendingBookings", pendingBookings);
-        model.addAttribute("confirmedBookings", confirmedBookings);
+        model.addAttribute("confirmedBookings", upcomingBookings);
+        model.addAttribute("pastBookings", pastBookings);
         return "bookings/provider";
     }
 
@@ -113,11 +115,13 @@ public class BookingController {
 
         List<Booking> pendingBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "PENDING");
         List<Booking> declinedBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "DECLINED");
-        List<Booking> confirmedBookings = bookingRepository.findByOwnerIdAndStatus(owner.getId(), "CONFIRMED");
+        List<Booking> confirmedBookings = bookingRepository.findByOwnerIdAndStatusAndEndTimeAfter(owner.getId(), "CONFIRMED", LocalDateTime.now());
+        List<Booking> pastBookings = bookingRepository.findByOwnerIdAndStatusAndEndTimeBefore(owner.getId(), "CONFIRMED", LocalDateTime.now());
 
         model.addAttribute("pendingBookings", pendingBookings);
         model.addAttribute("declinedBookings", declinedBookings);
         model.addAttribute("confirmedBookings", confirmedBookings);
+        model.addAttribute("pastBookings", pastBookings);
         return "bookings/owner";
     }
 
@@ -148,6 +152,23 @@ public class BookingController {
         booking.setStatus("DECLINED");
         bookingRepository.save(booking);
         return new RedirectView("/dashboard/provider/bookings");
+    }
+
+    @PostMapping("/bookings/{id}/cancel")
+    public RedirectView cancelBooking(@PathVariable Long id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow();
+        User provider = getCurrentUser();
+
+        boolean isOwner = booking.getOwner() != null && booking.getOwner().getId().equals(getCurrentUser().getId());
+        boolean isProvider = booking.getProvider() != null && booking.getProvider().getId().equals(getCurrentUser().getId());
+
+        if (!isOwner && !isProvider) {
+            return new RedirectView("/dashboard/owner/bookings");
+        }
+
+        booking.setStatus("CANCELLED");
+        bookingRepository.save(booking);
+        return new RedirectView("/dashboard/owner/bookings");
     }
 
 

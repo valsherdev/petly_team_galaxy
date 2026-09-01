@@ -122,6 +122,22 @@ public class PetController {
 
 
 
+    @GetMapping("/pets/{id}")
+    public String viewPet(@PathVariable Long id, Model model) {
+        User currentUser = getCurrentUser();
+
+        if ("PET_OWNER".equals(currentUser.getRole())) {
+            return "redirect:/my-pets";
+        }
+
+        Pet pet = petRepository.findById(id).orElseThrow();
+        model.addAttribute("pet", pet);
+        model.addAttribute("user", currentUser);
+        return "pets/show";
+    }
+
+
+
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()

@@ -41,9 +41,9 @@ public class HomeController {
 
 	@GetMapping("/dashboard/owner")
 	public String ownerDashboard(Model model) {
-		Iterable<Pet> pets = petRepository.findAll();
+		List<Pet> pets = petRepository.findByOwnerId(getCurrentUser().getId());
 		Iterable<Service> services = serviceRepository.findAll();
-		Iterable<Booking> bookings = bookingRepository.findAll();
+		List<Booking> bookings = bookingRepository.findByOwnerId(getCurrentUser().getId());
 		model.addAttribute("user", getCurrentUser());
 		model.addAttribute("pets", pets);
 		model.addAttribute("services", services);
