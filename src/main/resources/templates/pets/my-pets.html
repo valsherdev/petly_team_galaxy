@@ -10,19 +10,29 @@
 <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 <div class="flex flex-col items-center justify-start pt-8 pb-12 px-4 flex-grow max-w-4xl mx-auto w-full">
 
-    <div>
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2 text-center">
-            My Pets
-        </h1>
-        <p class="text-gray-500 text-sm mt-1 mb-3">
-            Manage your pets or add a new companion.
-        </p>
-    </div>
+    <section class="w-full bg-emerald-50/70 border border-emerald-200/60 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm mb-6">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-100 border border-emerald-200 flex items-center justify-center text-2xl shadow-sm shrink-0">
+                🐾
+            </div>
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800">My Pets</h1>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600">Manage your pets or add a new companion to your account.</p>
+            </div>
+        </div>
+        <a th:href="@{/dashboard/owner}" class="self-start md:self-auto text-xs font-bold text-slate-700 hover:text-emerald-800 bg-white hover:bg-emerald-50/50 border border-emerald-200 px-4 py-3 rounded-2xl transition-all shadow-sm flex items-center gap-1.5">
+            ← Back to Dashboard
+        </a>
+    </section>
 
     <div th:if="${pets == null or #lists.isEmpty(pets)}" class="contents justify-center items-center w-full">
-        <p class="pb-8 font-bold text-2xl justify-self-[anchor-center]">You haven't added any pets to your profile</p>
+        <div class="mb-5 inline-flex items-center gap-2 bg-slate-100 text-slate-600 text-xs font-medium px-4 py-1.5 rounded-full">
+            <span>🐶 No pets registered yet</span>
+        </div>
 
-        <a th:href="@{/my-pets/add}"
+        <a th:href="@{/my-pets/add}" data-testid="add-a-pet-btn"
            class="justify-self-[anchor-center] w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
 
             <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">
@@ -36,16 +46,16 @@
 
     </div>
 
-    <div th:if="${pets != null and !#lists.isEmpty(pets)}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-start">
+    <div th:if="${pets != null and !#lists.isEmpty(pets)}" data-testid="pet-card" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-start">
 
         <div th:each="pet : ${pets}" class="w-72 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 flex flex-col justify-between">
 
             <div>
                 <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400 font-medium">
-                    <img th:if="${pet.photo != null and !pet.photo.isEmpty()}"
+                    <img data-testid="pet-image" th:if="${pet.photo != null and !pet.photo.isEmpty()}"
                          th:src="${pet.photo}" th:alt="${pet.name}" class="w-full h-full object-cover object-center">
 
-                    <img th:unless="${pet.photo != null and !pet.photo.isEmpty()}"
+                    <img data-testid="pet-image" th:unless="${pet.photo != null and !pet.photo.isEmpty()}"
                          th:src="@{/images/animal_default.jpeg}" th:alt="${pet.name}" class="w-full h-full object-cover object-center">
                 </div>
 
@@ -68,14 +78,15 @@
             </div>
 
             <div>
-                <div class="px-6 pb-4 grid grid-cols-2 gap-3">
-                    <a th:href="@{/my-pets/{id}/edit(id=${pet.id})}"
-                       class="inline-block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-md">
+                <div class="px-5 pb-5 pt-1 grid grid-cols-2 gap-2.5">
+                    <a th:href="@{/my-pets/{id}/edit(id=${pet.id})}" data-testid="update-pet-btn"
+                       class="inline-block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2 px-3 rounded-xl transition-all shadow-sm">
                         Update
                     </a>
+
                     <form th:action="@{/my-pets/{id}/delete(id=${pet.id})}" method="post" class="w-full" onclick="return confirm('Are you sure you want to delete this pet?')">
-                        <button type="submit"
-                                class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded-md border border-gray-200 cursor-pointer transition-colors">
+                        <button type="submit" data-testid="remove-pet-btn"
+                                class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs py-2 px-3 rounded-xl border border-slate-200 cursor-pointer transition-colors">
                             Remove
                         </button>
                     </form>
@@ -84,7 +95,7 @@
         </div>
 
         <div th:if="${pets != null and !#lists.isEmpty(pets)}">
-            <a th:href="@{/my-pets/add}"
+            <a th:href="@{/my-pets/add}" data-testid="add-another-pet-btn"
                class="w-72 min-h-[420px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center group cursor-pointer p-6 text-center">
 
                 <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110">

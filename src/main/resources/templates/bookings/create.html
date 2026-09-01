@@ -3,50 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Book Service - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-<h1 th:text="${service.name}"></h1>
-<p th:text="'Provided by ' + ${service.provider.name}"></p>
-<p th:text="${service.description}"></p>
-<p th:text="${service.price} + ' / ' + ${service.priceUnit}"></p>
-<p th:if="${service.location}" th:text="'Location: ' + ${service.location}"></p>
+<body class="min-h-screen flex flex-col justify-between bg-slate-50">
+<div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 
-<p th:if="${error} == 'conflict'" style="color:red;">
-    Sorry, that time slot is no longer available.
-</p>
+<main class="flex-1 w-full max-w-2xl mx-auto px-4 py-8">
 
-<div th:if="${#lists.isEmpty(myPets)}">
-    <p>You don't have any pets added yet.</p>
-</div>
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-1" th:text="${service.name}"></h1>
+        <p class="text-xs font-semibold text-emerald-600 mb-3" th:text="'Provided by ' + ${service.provider.name}"></p>
+        <p class="text-sm text-gray-600 mb-4" th:text="${service.description}"></p>
 
-<form th:if="${not #lists.isEmpty(myPets)}" th:action="@{/bookings/create}" method="POST">
-    <input type="hidden" name="serviceId" th:value="${service.id}" />
-
-    <div>
-        <label for="petId">Pet:</label>
-        <select id="petId" name="petId" required>
-            <option th:each="pet : ${myPets}" th:value="${pet.id}" th:text="${pet.name}"></option>
-        </select>
+        <div class="space-y-1.5 text-xs text-gray-500 border-t border-gray-100 pt-3">
+            <p class="flex items-center gap-1">
+                <span class="font-semibold text-gray-700">Price:</span>
+                <span class="text-gray-900 font-bold text-sm">£<span th:text="${service.price}"></span></span>
+                <span th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>
+            </p>
+            <p th:if="${service.location}">
+                <span class="font-semibold text-gray-700">Location:</span>
+                <span th:text="${service.location}"></span>
+            </p>
+        </div>
     </div>
 
-    <br/>
-
-    <div>
-        <label for="startTime">Start:</label>
-        <input type="datetime-local" id="startTime" name="startTime" required />
+    <div th:if="${error} == 'conflict'" class="bg-red-50 border border-red-200 text-red-700 text-sm p-4 rounded-lg mb-6">
+        Sorry, that time slot is no longer available.
     </div>
 
-    <br/>
-
-    <div th:if="${service.durationMinutes} == null">
-        <label for="endTime">End:</label>
-        <input type="datetime-local" id="endTime" name="endTime" required />
+    <div th:if="${#lists.isEmpty(myPets)}" class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center">
+        <p class="text-gray-500 text-sm italic">You don't have any pets added yet.</p>
     </div>
-    <p th:if="${service.durationMinutes} != null"
-       th:text="'Duration: ' + ${service.durationMinutes} + ' minutes'"></p>
 
-    <br/>
-    <button type="submit">Book</button>
-</form>
+    <div th:if="${not #lists.isEmpty(myPets)}" class="bg-white rounded-xl shadow-md border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Booking Details</h2>
+
+        <form th:action="@{/bookings/create}" method="POST" class="space-y-4">
+            <input type="hidden" name="serviceId" th:value="${service.id}" />
+
+            <div>
+                <label for="petId" class="block text-xs font-semibold text-gray-700 mb-1">Select Pet</label>
+                <select id="petId" name="petId" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option th:each="pet : ${myPets}" th:value="${pet.id}" th:text="${pet.name}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label for="startTime" class="block text-xs font-semibold text-gray-700 mb-1">Start Time</label>
+                <input type="datetime-local" id="startTime" name="startTime" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+            </div>
+
+            <div th:if="${service.durationMinutes} == null">
+                <label for="endTime" class="block text-xs font-semibold text-gray-700 mb-1">End Time</label>
+                <input type="datetime-local" id="endTime" name="endTime" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+            </div>
+
+            <div th:if="${service.durationMinutes} != null" class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <p class="text-xs text-gray-600">
+                    <span class="font-semibold text-gray-700">Duration:</span>
+                    <span th:text="${service.durationMinutes} + ' minutes'"></span>
+                </p>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm py-2.5 px-4 rounded-lg transition-colors shadow-xs mt-2">
+                Book
+            </button>
+        </form>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

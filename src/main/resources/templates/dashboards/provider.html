@@ -9,115 +9,116 @@
 <body>
 <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
 
-<main>
-    <section>
-        <h1>Welcome back, <span th:text="${user.name}"></span>!</h1>
-    </section>
+<main class="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
-    <hr />
-    <section>
-        <h2>Add a New Service</h2>
-        <form th:action="@{/services/create}" th:object="${newService}" method="POST">
+    <header class="bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6">
+        <h1 class="text-3xl font-bold text-slate-800">
+            Welcome back, <span th:text="${user.name}" class="text-[#7794d1]"></span>!
+        </h1>
+        <p class="text-xs font-medium text-slate-500 mt-1">Manage your active listings and add new services.</p>
+    </header>
 
-            <div>
-                <label for="name">Name of Your Service:</label>
-                <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required />
+    <div class="grid grid-cols-1 lg:grid-cols-8 gap-6 items-start">
+        <aside class="lg:col-span-3 bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6 lg:sticky lg:top-6">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-[#cad5ed]">Add a Service</h2>
+
+            <form th:action="@{/services/create}" th:object="${newService}" method="POST" class="space-y-3.5">
+                <div>
+                    <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Name</label>
+                    <input type="text" id="name" th:field="*{name}" placeholder="e.g. Dog Boarding" required
+                           class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm focus:ring-2 focus:ring-[#7794d1] focus:outline-none" />
+                </div>
+
+                <div>
+                    <label for="type" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+                    <select id="type" th:field="*{type}" required
+                            class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:ring-2 focus:ring-[#7794d1] focus:outline-none">
+                        <option value="" disabled selected>Select category</option>
+                        <option value="PET_CARE">Pet Care</option>
+                        <option value="GROOMING">Grooming</option>
+                        <option value="VETERINARY">Veterinary</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="price" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Price (£)</label>
+                        <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required
+                               class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm focus:ring-2 focus:ring-[#7794d1] focus:outline-none" />
+                    </div>
+                    <div>
+                        <label for="priceUnit" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Unit</label>
+                        <select id="priceUnit" th:field="*{priceUnit}" required
+                                class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:ring-2 focus:ring-[#7794d1] focus:outline-none">
+                            <option value="PER_HOUR">per hour</option>
+                            <option value="PER_DAY">per day</option>
+                            <option value="FIXED">fixed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="duration" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mins</label>
+                        <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="60" min="1"
+                               class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm focus:ring-2 focus:ring-[#7794d1] focus:outline-none" />
+                    </div>
+                    <div>
+                        <label for="location" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Postcode</label>
+                        <input type="text" id="location" th:field="*{location}" placeholder="SW1A 1AA" required
+                               class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm focus:ring-2 focus:ring-[#7794d1] focus:outline-none" />
+                        <p th:if="${postcodeError}" th:text="${postcodeError}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Description</label>
+                    <textarea id="description" th:field="*{description}" rows="3" placeholder="Service description..." required
+                              class="w-full px-3 py-2 bg-white/90 border border-[#cad5ed] rounded-xl text-sm focus:ring-2 focus:ring-[#7794d1] focus:outline-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-[#7794d1] hover:bg-[#5e7bb8] text-white font-semibold text-sm py-2.5 rounded-xl transition-colors">
+                    Save Service
+                </button>
+            </form>
+        </aside>
+
+        <section class="lg:col-span-5 bg-[#cad5ed]/20 rounded-2xl border border-[#cad5ed] p-6">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-[#cad5ed]">My Services</h2>
+
+            <div th:if="${not #lists.isEmpty(services)}" class="grid grid-cols-1 gap-4">
+                <article th:each="service : ${services}" class="bg-white/90 rounded-2xl border border-[#cad5ed] p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <h3 class="font-bold text-slate-800 text-base" th:text="${service.name}"></h3>
+                            <span class="text-[10px] font-bold text-[#7794d1] bg-[#cad5ed]/40 border border-[#cad5ed] px-2 py-0.5 rounded-full uppercase" th:text="${service.type}"></span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3 line-clamp-2" th:text="${service.description}"></p>
+
+                        <div class="text-xs bg-[#cad5ed]/30 p-2.5 rounded-xl space-y-1 mb-3">
+                            <p class="flex justify-between">
+                                <span class="text-slate-500">Price:</span>
+                                <span class="font-bold text-slate-800">£<span th:text="${service.price}"></span> / <span th:text="${service.priceUnit}"></span></span>
+                            </p>
+                            <p class="flex justify-between" th:if="${service.location}">
+                                <span class="text-slate-500">Location:</span>
+                                <span class="font-semibold text-slate-700" th:text="${service.location}"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2 border-t border-[#cad5ed]/60">
+                        <a th:href="@{/services/{id}/edit(id=${service.id})}" class="flex-1 text-center bg-[#cad5ed]/50 hover:bg-[#cad5ed] text-slate-700 font-semibold text-xs py-1.5 rounded-lg">Edit</a>
+                        <form th:action="@{/services/{id}/delete(id=${service.id})}" method="POST" class="flex-1" onsubmit="return confirm('Delete this service? This will also delete any bookings made for it.');">
+                            <button type="submit" class="w-full bg-rose-50 text-rose-600 font-semibold text-xs py-1.5 rounded-lg border border-rose-200">Delete</button>
+                        </form>
+                    </div>
+                </article>
             </div>
-
-            <br />
-
-            <div>
-                <label for="type">Category:</label>
-                <select id="type" th:field="*{type}" required>
-                    <option value="" disabled selected>Select a Category</option>
-                    <option value="PET_CARE">Pet Care</option>
-                    <option value="GROOMING">Grooming</option>
-                    <option value="VETERINARY">Veterinary</option>
-                </select>
-            </div>
-            <br />
-
-            <div>
-                <label for="duration">Duration (in minutes, optional):</label>
-                <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1" />
-            </div>
-            <br />
-
-            <div>
-                <label for="price">Price (£):</label>
-                <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="25.00" required />
-            </div>
-
-            <br />
-
-            <div>
-                <label for="priceUnit">Price Unit:</label>
-                <select id="priceUnit" th:field="*{priceUnit}" required>
-                    <option value="PER_HOUR">per hour</option>
-                    <option value="PER_DAY">per day</option>
-                    <option value="FIXED">fixed</option>
-                </select>
-            </div>
-
-            <br />
-
-            <div>
-                <label for="location">Postcode:</label>
-                <input type="text" id="location" th:field="*{location}" placeholder="e.g. SW1A 1AA" required/>
-                <p th:if="${postcodeError}" th:text="${postcodeError}"></p>
-            </div>
-
-            <br />
-
-            <div>
-                <label for="description">Description:</label>
-                <textarea id="description" th:field="*{description}" rows="4" cols="50" placeholder="Describe your service..." required></textarea>
-            </div>
-
-            <br />
-
-            <button type="submit">Save</button>
-        </form>
-    </section>
-
-    <hr />
-    <section>
-        <h2>My Services</h2>
-        <div th:if="${not #lists.isEmpty(services)}">
-            <article th:each="service : ${services}">
-                <h3 th:text="${service.name}"></h3>
-                <p><strong>Category:</strong> <span th:text="${service.type}"></span></p>
-                <p th:text="${service.description}"></p>
-
-                <p>
-                    <strong>Duration:</strong>
-                    <span th:text="${service.durationMinutes} != null ? ${service.durationMinutes} + ' mins' : 'Flexible'"></span>
-                </p>
-
-                <p>
-                    <strong>Price:</strong>
-                    £<span th:text="${service.price}"></span>
-                    <span th:if="${service.priceUnit != null and service.priceUnit != 'FIXED'}"
-                          th:text="'/ ' + ${#strings.toLowerCase(service.priceUnit).replace('per_', '')}"></span>
-                </p>
-
-                <p th:if="${service.location != null and !#strings.isEmpty(service.location)}">
-                    <strong>Location:</strong> <span th:text="${service.location}"></span>
-                </p>
-
-                <a th:href="@{/services/{id}/edit(id=${service.id})}">Edit</a>
-                <form th:action="@{/services/{id}/delete(id=${service.id})}" method="POST" style="display:inline;"
-                      onsubmit="return confirm('Delete this service? This will also delete any bookings made for it.');">
-                    <button type="submit">Delete</button>
-                </form>
-
-                <hr />
-            </article>
-        </div>
-        <p th:if="${#lists.isEmpty(services)}">You haven't added any services yet.</p>
-    </section>
-
+            <p th:if="${#lists.isEmpty(services)}" class="text-slate-400 text-sm italic">No services added yet.</p>
+        </section>
+    </div>
 </main>
-<!--<div th:replace="~{fragments/footer :: footer}"></div>-->
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -4,8 +4,36 @@
   <meta charset="UTF-8">
   <title>Messages - Petly</title>
   <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<!--<body>-->
+<!--<div th:if="${user.role == 'SERVICE_PROVIDER'}">-->
+<!--  <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>-->
+<!--</div>-->
+<!--<div th:if="${user.role == 'PET_OWNER'}">-->
+<!--  <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>-->
+<!--</div>-->
+
+<!--<main>-->
+<!--  <h1>Messages</h1>-->
+
+<!--  <div th:each="message : ${conversations}"-->
+<!--       th:with="partner=${message.sender.id == currentUserId} ? ${message.recipient} : ${message.sender},-->
+<!--                  unreadCount=${unreadCountByPartnerId.get(partner.id)}">-->
+<!--    <a th:href="@{/messages/{id}(id=${partner.id})}">-->
+<!--      <strong th:text="${partner.name}"></strong>-->
+<!--      <span th:text="${message.content}"></span>-->
+<!--      <span th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}"></span>-->
+<!--      <span th:if="${unreadCount > 0}" th:text="'(' + ${unreadCount} + ' unread)'"></span>-->
+<!--    </a>-->
+<!--    <hr/>-->
+<!--  </div>-->
+<!--  <p th:if="${conversations.isEmpty()}">No conversations yet.</p>-->
+<!--</main>-->
+<!--</body>-->
+
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
+
 <div th:if="${user.role == 'SERVICE_PROVIDER'}">
   <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
 </div>
@@ -13,21 +41,92 @@
   <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 </div>
 
-<main>
-  <h1>Messages</h1>
+<div class="flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 
-  <div th:each="message : ${conversations}"
-       th:with="partner=${message.sender.id == currentUserId} ? ${message.recipient} : ${message.sender},
-                  unreadCount=${unreadCountByPartnerId.get(partner.id)}">
-    <a th:href="@{/messages/{id}(id=${partner.id})}">
-      <strong th:text="${partner.name}"></strong>
-      <span th:text="${message.content}"></span>
-      <span th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}"></span>
-      <span th:if="${unreadCount > 0}" th:text="'(' + ${unreadCount} + ' unread)'"></span>
-    </a>
-    <hr/>
-  </div>
-  <p th:if="${conversations.isEmpty()}">No conversations yet.</p>
-</main>
+  <section>
+    <div class="border rounded-3xl p-6 sm:p-8 flex items-center justify-between shadow-sm"
+         th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'bg-gradient-to-r from-[#cad5ed]/40 via-[#cad5ed]/20 to-white border-[#7794d1]/40' : 'bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-white border-emerald-200/80'">
+
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold shrink-0 shadow-sm border"
+             th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'bg-[#cad5ed]/50 text-[#7794d1] border-[#7794d1]/40' : 'bg-emerald-100 text-emerald-800 border-emerald-200'">
+          💬
+        </div>
+
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Messages</h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Your conversations and booking enquiries.</p>
+        </div>
+      </div>
+      <a th:href="@{${user.role == 'SERVICE_PROVIDER'} ? '/dashboard/provider' : '/dashboard/owner'}"
+         class="self-start md:self-auto text-xs font-bold bg-white border px-4 py-3 rounded-2xl transition-all shadow-sm flex items-center gap-1.5 shrink-0"
+         th:classappend="${user.role == 'SERVICE_PROVIDER'}
+     ? 'text-slate-700 hover:text-[#7794d1] border-[#cad5ed] hover:bg-[#cad5ed]/20'
+     : 'text-slate-700 hover:text-emerald-800 border-emerald-200 hover:bg-emerald-50/50'">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </section>
+
+  <main class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+
+    <div th:if="${not #lists.isEmpty(conversations)}" class="divide-y divide-slate-100">
+      <div th:each="message : ${conversations}"
+           th:with="partner=${message.sender.id == currentUserId} ? ${message.recipient} : ${message.sender},
+                    unreadCount=${unreadCountByPartnerId.get(partner.id)}">
+
+        <a th:href="@{/messages/{id}#bottom-anchor(id=${partner.id})}"
+           class="group p-5 flex items-center justify-between gap-4 hover:bg-slate-50/80 block">
+
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-bold flex items-center justify-center shrink-0"
+                 th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'group-hover:bg-[#cad5ed]/40 group-hover:text-[#7794d1] group-hover:border-[#7794d1]/40' : 'group-hover:bg-emerald-50 group-hover:text-emerald-700 group-hover:border-emerald-200'">
+              <span th:text="${#strings.substring(partner.name, 0, 1)}">U</span>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-slate-800 text-base truncate"
+                    th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'group-hover:text-[#7794d1]' : 'group-hover:text-emerald-700'"
+                    th:text="${partner.name}"></h3>
+
+                <span th:if="${unreadCount != null and unreadCount > 0}"
+                      class="text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm"
+                      th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'bg-[#7794d1]' : 'bg-emerald-500'"
+                      th:text="${unreadCount} + ' new'">
+                </span>
+              </div>
+
+              <p class="text-xs sm:text-sm text-slate-500 truncate mt-0.5 font-normal"
+                 th:text="${message.content}"></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="text-xs font-medium text-slate-400"
+                  th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}"></span>
+
+            <span class="text-slate-300 group-hover:translate-x-0.5 text-sm font-bold"
+                  th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'group-hover:text-[#7794d1]' : 'group-hover:text-emerald-600'">
+              →
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div th:if="${conversations.isEmpty()}" class="p-12 text-center">
+      <div class="w-16 h-16 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center text-2xl mx-auto mb-3 border border-slate-100">
+        📥
+      </div>
+      <h3 class="text-base font-bold text-slate-700 mb-1">No conversations yet</h3>
+      <p class="text-xs sm:text-sm text-slate-500">When you message a pet owner or provider, your chat history will show up here.</p>
+    </div>
+
+  </main>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

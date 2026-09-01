@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <title th:text="'Chat with ' + ${otherUser.name}">Messages</title>
     <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<!--<body>-->
+<!--<div th:if="${user.role == 'SERVICE_PROVIDER'}">-->
+<!--    <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>-->
+<!--</div>-->
+<!--<div th:if="${user.role == 'PET_OWNER'}">-->
+<!--    <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>-->
+<!--</div>-->
+
+<!--<main>-->
+<!--    <a th:href="@{/messages}">&larr; Back to messages</a>-->
+
+<!--    <h1 th:text="'Conversation with ' + ${otherUser.name}"></h1>-->
+
+<!--    <div>-->
+<!--        <div th:each="message : ${messages}">-->
+<!--            <strong th:text="${message.sender.name}"></strong>-->
+<!--            <span th:text="${message.content}"></span>-->
+<!--            <span th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}"></span>-->
+<!--        </div>-->
+<!--        <p th:if="${messages.isEmpty()}">No messages yet - say hello!</p>-->
+
+<!--        <div id="bottom-anchor"></div>-->
+<!--    </div>-->
+
+<!--    <form th:action="@{'/messages/' + ${otherUser.id} + '#bottom-anchor'}" method="post">-->
+<!--        <input type="text" name="content" placeholder="Write a message..." required/>-->
+<!--        <button type="submit">Send</button>-->
+<!--    </form>-->
+<!--</main>-->
+<!--</body>-->
+
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
+
 <div th:if="${user.role == 'SERVICE_PROVIDER'}">
     <div th:replace="~{fragments/navbars :: navbar_service_provider}"></div>
 </div>
@@ -13,26 +46,80 @@
     <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 </div>
 
-<main>
-    <a th:href="@{/messages}">&larr; Back to messages</a>
+<div class="flex-1 flex flex-col w-full max-w-3xl mx-auto px-4 py-6 space-y-4">
 
-    <h1 th:text="'Conversation with ' + ${otherUser.name}"></h1>
-
-    <div>
-        <div th:each="message : ${messages}">
-            <strong th:text="${message.sender.name}"></strong>
-            <span th:text="${message.content}"></span>
-            <span th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}"></span>
+    <header class="bg-white border border-slate-100 rounded-3xl p-4 sm:p-5 shadow-sm flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <a th:href="@{/messages}"
+               class="w-10 h-10 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-sm shadow-sm">
+                ←
+            </a>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full font-bold flex items-center justify-center shrink-0 border"
+                     th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'bg-[#cad5ed]/40 text-[#7794d1] border-[#7794d1]/40' : 'bg-emerald-100 text-emerald-800 border-emerald-200'">
+                    <span th:text="${#strings.substring(otherUser.name, 0, 1)}">U</span>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold text-slate-800 leading-tight" th:text="${otherUser.name}"></h1>
+                </div>
+            </div>
         </div>
-        <p th:if="${messages.isEmpty()}">No messages yet - say hello!</p>
+    </header>
 
-        <div id="bottom-anchor"></div>
-    </div>
+    <main class="bg-white rounded-3xl shadow-sm border border-slate-100 p-4 sm:p-6 flex-1 flex flex-col justify-between min-h-[450px]">
 
-    <form th:action="@{'/messages/' + ${otherUser.id} + '#bottom-anchor'}" method="post">
-        <input type="text" name="content" placeholder="Write a message..." required/>
-        <button type="submit">Send</button>
-    </form>
-</main>
+        <div class="space-y-4 overflow-y-auto mb-4 max-h-[60vh] pr-1">
+
+            <div th:if="${messages.isEmpty()}" class="py-12 text-center my-auto">
+                <div class="w-14 h-14 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center text-xl mx-auto mb-3 border border-slate-100">
+                    👋
+                </div>
+                <p class="text-slate-500 text-sm font-medium">No messages yet. Send a greeting to get started!</p>
+            </div>
+
+            <div th:each="message : ${messages}"
+                 class="flex flex-col"
+                 th:classappend="${message.sender.id == user.id} ? 'items-end' : 'items-start'">
+
+                <div class="max-w-[80%] sm:max-w-[70%] space-y-1">
+
+                    <span th:if="${message.sender.id != user.id}"
+                          class="text-[11px] font-semibold text-slate-400 ml-3"
+                          th:text="${message.sender.name}">
+                    </span>
+
+                    <div class="px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm break-words"
+                         th:classappend="${message.sender.id == user.id} ? (${user.role == 'SERVICE_PROVIDER'} ? 'bg-[#7794d1] text-white rounded-br-none' : 'bg-emerald-600 text-white rounded-br-none') : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200/60'">
+                        <p th:text="${message.content}"></p>
+                    </div>
+
+                    <span class="text-[10px] text-slate-400 px-1 font-medium block"
+                          th:classappend="${message.sender.id == user.id} ? 'text-right' : 'text-left'"
+                          th:text="${#temporals.format(message.createdAt, 'dd MMM, HH:mm')}">
+                    </span>
+                </div>
+            </div>
+
+            <div id="bottom-anchor"></div>
+        </div>
+
+        <form th:action="@{'/messages/' + ${otherUser.id} + '#bottom-anchor'}"
+              method="post"
+              class="pt-3 border-t border-slate-100 flex items-center gap-2">
+
+            <input type="text" name="content" placeholder="Write a message..." required
+                   class="flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2"
+                   th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'focus:ring-[#7794d1]/20 focus:border-[#7794d1]' : 'focus:ring-emerald-500/20 focus:border-emerald-500'" />
+
+            <button type="submit"
+                    class="text-white font-bold text-sm px-6 py-3 rounded-full shadow-sm hover:shadow shrink-0 flex items-center gap-1.5 cursor-pointer"
+                    th:classappend="${user.role == 'SERVICE_PROVIDER'} ? 'bg-[#7794d1] hover:bg-[#6581be]' : 'bg-emerald-600 hover:bg-emerald-700'">
+                <span>Send</span>
+                <span>→</span>
+            </button>
+        </form>
+    </main>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
