@@ -53,7 +53,7 @@
                     <a th:href="@{/dashboard/owner/bookings}" class="text-sm font-semibold text-emerald-600 hover:underline">All →</a>
                 </div>
                 <div th:if="${bookings != null and !#lists.isEmpty(activeBookings)}" class="space-y-2.5">
-                    <div th:each="booking, iter : ${activeBookings}" th:if="${iter.index < 2 and !#strings.equalsIgnoreCase(booking.status, 'cancelled')}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
+                    <div th:each="booking, iter : ${activeBookings}" th:if="${iter.index < 2}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
                         <span class="font-bold text-slate-800 truncate" th:text="${booking.service.name}"></span>
 
                         <span th:switch="${#strings.toLowerCase(booking.status)}" class="font-semibold capitalize text-xs">
