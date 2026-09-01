@@ -16,4 +16,7 @@ public interface BookingRepository extends CrudRepository<Booking, Long> {
     List<Booking> findByOwnerIdAndStatusAndEndTimeAfter(Long ownerId, String status, LocalDateTime endTime);
     List<Booking> findByOwnerIdAndStatusAndEndTimeBefore(Long ownerId, String status, LocalDateTime endTime);
 
+    List<Booking> findByProviderIdAndStatusAndEndTimeAfter(Long providerId, String status, LocalDateTime endTime);
+    List<Booking> findByProviderIdAndStatusAndEndTimeBefore(Long providerId, String status, LocalDateTime endTime);
+
 }

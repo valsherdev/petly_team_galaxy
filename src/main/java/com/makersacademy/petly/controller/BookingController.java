@@ -99,10 +99,12 @@ public class BookingController {
         User provider = getCurrentUser();
 
         List<Booking> pendingBookings = bookingRepository.findByProviderIdAndStatus(provider.getId(), "PENDING");
-        List<Booking> confirmedBookings = bookingRepository.findByProviderIdAndStatus(provider.getId(), "CONFIRMED");
+        List<Booking> upcomingBookings = bookingRepository.findByProviderIdAndStatusAndEndTimeAfter(provider.getId(), "CONFIRMED", LocalDateTime.now());
+        List<Booking> pastBookings = bookingRepository.findByProviderIdAndStatusAndEndTimeBefore(provider.getId(), "CONFIRMED", LocalDateTime.now());
 
         model.addAttribute("pendingBookings", pendingBookings);
-        model.addAttribute("confirmedBookings", confirmedBookings);
+        model.addAttribute("confirmedBookings", upcomingBookings);
+        model.addAttribute("pastBookings", pastBookings);
         return "bookings/provider";
     }
 

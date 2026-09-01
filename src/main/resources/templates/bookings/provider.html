@@ -127,6 +127,47 @@
       <p class="text-slate-400 text-sm italic">No confirmed bookings yet.</p>
     </div>
   </section>
+
+
+  <section class="bg-slate-50/80 rounded-2xl shadow-sm border border-[#cad5ed] p-6 md:p-8">
+    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#cad5ed]">
+      <div class="w-2.5 h-6 rounded-full bg-slate-400"></div>
+      <h2 class="text-xl font-bold text-slate-800">Booking History</h2>
+      <span th:if="${not #lists.isEmpty(pastBookings)}"
+            class="ml-auto text-xs font-bold text-slate-600 bg-slate-200/60 border border-slate-300 px-3 py-1 rounded-full"
+            th:text="${#lists.size(pastBookings)} + ' past'"></span>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(pastBookings)}" class="overflow-x-auto rounded-xl border border-[#cad5ed] bg-white shadow-sm">
+      <table class="w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-slate-100/70 border-b border-[#cad5ed] text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <th class="py-3.5 px-4">Service</th>
+          <th class="py-3.5 px-4">Pet</th>
+          <th class="py-3.5 px-4">Owner</th>
+          <th class="py-3.5 px-4">Start Time</th>
+          <th class="py-3.5 px-4">End Time</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
+        <tr th:each="booking : ${pastBookings}" class="hover:bg-slate-50/80">
+          <td class="py-4 px-4 font-semibold text-slate-700 opacity-80" th:text="${booking.service.name}"></td>
+          <td class="py-4 px-4">
+            <a th:href="@{/pets/{id}(id=${booking.pet.id})}" class="text-[#7794d1] hover:underline font-medium" th:text="${booking.pet.name}"></a>
+          </td>
+          <td class="py-4 px-4 text-slate-600" th:text="${booking.owner.name}"></td>
+          <td class="py-4 px-4 text-xs font-medium text-slate-600" th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
+          <td class="py-4 px-4 text-xs font-medium text-slate-600" th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(pastBookings)}" class="bg-white rounded-xl border border-dashed border-[#cad5ed] p-8 text-center">
+      <p class="text-slate-400 text-sm italic">No past bookings yet.</p>
+    </div>
+  </section>
+
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
