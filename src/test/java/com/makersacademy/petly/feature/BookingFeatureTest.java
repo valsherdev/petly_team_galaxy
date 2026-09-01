@@ -204,6 +204,36 @@ public class BookingFeatureTest {
     }
 
     @Test
+    public void providerCanDeclinePendingRequest() {
+        String providerEmail = faker.name().username() + "@email.com";
+        Long providerId = signUpAs(providerEmail, "SERVICE_PROVIDER", "Test Provider");
+        Long serviceId = insertService(providerId, "Grooming " + faker.number().digits(6), "GROOMING", 30);
+
+        Long ownerId = insertProvider(faker.name().username() + "@email.com", "Test Owner");
+        Long petId = insertPet(ownerId, "Bella");
+        insertBooking(petId, serviceId, ownerId, providerId,
+                "2027-04-01 09:00:00", "2027-04-01 09:30:00", "PENDING");
+
+        Long bookingId = jdbcTemplate.queryForObject(
+                "SELECT id FROM bookings WHERE service_id = ? AND owner_id = ?",
+                Long.class, serviceId, ownerId);
+
+        driver.get("http://localhost:8081/dashboard/provider/bookings");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
+
+        driver.findElement(
+                By.cssSelector("form[action='/bookings/" + bookingId + "/decline'] button")).click();
+
+        driver.switchTo().alert().accept();
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            String status = jdbcTemplate.queryForObject(
+                    "SELECT status FROM bookings WHERE id = ?", String.class, bookingId);
+            assertEquals("DECLINED", status);
+        });
+    }
+
+    @Test
     public void ownerCanCancelPendingBooking() {
 
         String providerEmail = faker.name().username() + "@email.com";
@@ -337,6 +367,29 @@ public class BookingFeatureTest {
 
         assertTrue(isNotVisible);
         assertEquals(0, bookingCountFor(serviceId, ownerId, "CONFIRMED"));
+    }
+
+
+    @Test
+    public void ownerCannotBookServiceInThePast() {
+        Long providerId = insertProvider(faker.name().username() + "@email.com", "Test Provider");
+        Long serviceId = insertService(providerId, "Grooming " + faker.number().digits(6), "GROOMING", 30);
+
+        String ownerEmail = faker.name().username() + "@email.com";
+        Long ownerId = signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
+        Long petId = insertPet(ownerId, "Coco");
+
+        driver.get("http://localhost:8081/services/" + serviceId + "/book");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startTime")));
+
+        new Select(driver.findElement(By.id("petId"))).selectByValue(petId.toString());
+        setDateTimeLocal(driver.findElement(By.id("startTime")), "2020-01-15T10:00");
+        driver.findElement(By.cssSelector("form[action='/bookings/create'] button[type='submit']")).click();
+
+        wait.until(ExpectedConditions.urlContains("error=past"));
+
+        assertTrue(driver.getCurrentUrl().contains("error=past"));
+        assertEquals(0, bookingCountFor(serviceId, ownerId, "PENDING"));
     }
 
 }
