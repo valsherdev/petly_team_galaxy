@@ -67,6 +67,10 @@ public class BookingController {
         LocalDateTime start = LocalDateTime.parse(startTime, FORMATTER);
         LocalDateTime end;
 
+        if (start.isBefore(LocalDateTime.now())) {
+            return new RedirectView("/services/" + serviceId + "/book?error=past");
+        }
+
         if (service.getDuration() != null) {
             end = start.plus(service.getDuration());
         } else {
