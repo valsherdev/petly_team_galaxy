@@ -174,7 +174,7 @@ public class PetFeatureTest {
     }
 
     @Test
-    public void ownerCanAddImageToPetProfile() {
+    public void ownerCanEditExistingPetByAddingAnImage() {
 
         String ownerEmail = faker.name().username() + "@email.com";
         signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
@@ -195,6 +195,42 @@ public class PetFeatureTest {
         wait.until(ExpectedConditions.urlContains("/my-pets"));
 
         WebElement petCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='pet-card']")));
+        WebElement petImage = petCard.findElement(By.cssSelector("[data-testid='pet-image']"));
+        assertTrue(petImage.isDisplayed());
+        String imageSrc = petImage.getAttribute("src");
+        assertNotNull(imageSrc);
+        assertFalse(imageSrc.isEmpty());
+    }
+
+    @Test
+    public void ownerCanAddAPetWithImageAndSeePetOnMyPetsPage() {
+
+        String ownerEmail = faker.name().username() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
+
+        driver.get("http://localhost:8081/my-pets");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='add-a-pet-btn']")));
+
+        driver.findElement(By.cssSelector("[data-testid='add-a-pet-btn']")).click();
+        wait.until(ExpectedConditions.urlContains("/my-pets/add"));
+
+        File testImageFile = new File("src/test/resources/cat.jpeg");
+        String imagePath = testImageFile.getAbsolutePath();
+
+        driver.findElement(By.cssSelector("[data-testid='photo']")).sendKeys(imagePath);
+        driver.findElement(By.cssSelector("[data-testid='name']")).sendKeys("Patrick");
+        driver.findElement(By.cssSelector("[data-testid='type']")).sendKeys("Dog");
+        driver.findElement(By.cssSelector("[data-testid='breed']")).sendKeys("Golden Retriever");
+        driver.findElement(By.cssSelector("[data-testid='age']")).sendKeys("7");
+        driver.findElement(By.cssSelector("[data-testid='description']")).sendKeys("I am a dog");
+
+        driver.findElement(By.cssSelector("[data-testid='submit-pet-btn']")).click();
+
+        wait.until(ExpectedConditions.urlContains("/my-pets"));
+
+        WebElement petCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='pet-card']")));
+        String pageText = driver.findElement(By.cssSelector("[data-testid='pet-card']")).getText();
+        assertTrue(pageText.contains("Patrick"));
         WebElement petImage = petCard.findElement(By.cssSelector("[data-testid='pet-image']"));
         assertTrue(petImage.isDisplayed());
         String imageSrc = petImage.getAttribute("src");
