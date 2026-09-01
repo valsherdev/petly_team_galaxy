@@ -33,6 +33,10 @@
         Sorry, that time slot is no longer available.
     </div>
 
+    <div th:if="${error} == 'past'" class="bg-red-50 border border-red-200 text-red-700 text-sm p-4 rounded-lg mb-6">
+        Please choose a start time in the future.
+    </div>
+
     <div th:if="${#lists.isEmpty(myPets)}" class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center">
         <p class="text-gray-500 text-sm italic">You don't have any pets added yet.</p>
     </div>
