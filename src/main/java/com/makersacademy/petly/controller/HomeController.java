@@ -13,7 +13,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.ui.Model;
 
@@ -60,6 +63,22 @@ public class HomeController {
 		if (!model.containsAttribute("newService")) {
 		model.addAttribute("newService", new Service());}
 		return "dashboards/provider";
+	}
+
+	@PostMapping("/profile/provider_name")
+	public RedirectView updateProviderName(@RequestParam String name, RedirectAttributes redirectAttributes) {
+
+		User currentUser = getCurrentUser();
+
+		currentUser.setName(name);
+		userRepository.save(currentUser);
+
+		redirectAttributes.addFlashAttribute(
+				"providerNameSuccess",
+				"Name updated successfully!"
+		);
+
+		return new RedirectView("/dashboard/provider");
 	}
 
 	private User getCurrentUser() {
