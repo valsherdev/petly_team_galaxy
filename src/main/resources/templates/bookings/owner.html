@@ -35,7 +35,7 @@
             <h2 class="text-xl font-bold text-slate-800">Pending Requests</h2>
             <span th:if="${not #lists.isEmpty(pendingBookings)}"
                   class="ml-auto text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full"
-                  th:text="${#lists.size(pendingBookings)} + ' pending'"></span>
+                  th:text="${#lists.size(pendingBookings)} + ' Pending'"></span>
         </div>
 
         <div th:if="${not #lists.isEmpty(pendingBookings)}" class="overflow-x-auto rounded-xl border border-slate-200/70">
@@ -53,7 +53,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
                 <tr th:each="booking : ${pendingBookings}" class="hover:bg-amber-50/20 transition-colors"
-                    th:attr="data-testid='booking-row-' + ${booking.id}">>
+                    th:attr="data-testid='booking-row-' + ${booking.id}">
                     <td class="py-4 px-4 font-bold text-slate-900" th:text="${booking.service.name}"></td>
                     <td class="py-4 px-4" th:text="${booking.pet.name}"></td>
                     <td class="py-4 px-4 text-slate-600" th:text="${booking.provider.name}"></td>
@@ -91,7 +91,7 @@
             <h2 class="text-xl font-bold text-slate-800">Upcoming Bookings</h2>
             <span th:if="${not #lists.isEmpty(confirmedBookings)}"
                   class="ml-auto text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full"
-                  th:text="${#lists.size(confirmedBookings)} + ' confirmed'"></span>
+                  th:text="${#lists.size(confirmedBookings)} + ' Confirmed'"></span>
         </div>
 
         <div th:if="${not #lists.isEmpty(confirmedBookings)}" class="overflow-x-auto rounded-xl border border-slate-200/70">
@@ -147,11 +147,10 @@
             <h2 class="text-xl font-bold text-slate-800">Declined Requests</h2>
             <span th:if="${not #lists.isEmpty(declinedBookings)}"
                   class="ml-auto text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 px-3 py-1 rounded-full"
-                  th:text="${#lists.size(declinedBookings)} + ' declined'"></span>
+                  th:text="${#lists.size(declinedBookings)} + ' Declined'"></span>
         </div>
 
-        <div th:if="${not #lists.isEmpty(declinedBookings)}" class="overflow-x-auto rounded-xl border border-slate-200/70"
-             th:attr="data-testid='booking-row-' + ${booking.id}">
+        <div th:if="${not #lists.isEmpty(declinedBookings)}" class="overflow-x-auto rounded-xl border border-slate-200/70">
             <table class="w-full text-left border-collapse">
                 <thead>
                 <tr class="bg-slate-50/80 border-b border-slate-200/70 text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -164,7 +163,8 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
-                <tr th:each="booking : ${declinedBookings}" class="hover:bg-rose-50/20 transition-colors">
+                <tr th:each="booking : ${declinedBookings}" class="hover:bg-rose-50/20 transition-colors"
+                    th:attr="data-testid='booking-row-' + ${booking.id}">
                     <td class="py-4 px-4 font-semibold text-slate-700 opacity-80" th:text="${booking.service.name}"></td>
                     <td class="py-4 px-4" th:text="${booking.pet.name}"></td>
                     <td class="py-4 px-4 text-slate-600" th:text="${booking.provider.name}"></td>

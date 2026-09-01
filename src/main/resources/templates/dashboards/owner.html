@@ -45,24 +45,25 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between"
+             th:with="activeBookings=${bookings != null ? bookings.?[status != null and !status.equalsIgnoreCase('cancelled')] : null}">
             <div>
                 <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
                     <h2 class="font-bold text-slate-800 text-lg">📅 My Bookings</h2>
                     <a th:href="@{/dashboard/owner/bookings}" class="text-sm font-semibold text-emerald-600 hover:underline">All →</a>
                 </div>
-                <div th:if="${bookings != null and !#lists.isEmpty(bookings)}" class="space-y-2.5">
-                    <div th:each="booking, iter : ${bookings}" th:if="${iter.index < 2 and !#strings.equalsIgnoreCase(booking.status, 'cancelled')}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
+                <div th:if="${bookings != null and !#lists.isEmpty(activeBookings)}" class="space-y-2.5">
+                    <div th:each="booking, iter : ${activeBookings}" th:if="${iter.index < 2 and !#strings.equalsIgnoreCase(booking.status, 'cancelled')}" class="flex justify-between items-center bg-slate-50 p-3 rounded-xl text-base border border-slate-100">
                         <span class="font-bold text-slate-800 truncate" th:text="${booking.service.name}"></span>
 
                         <span th:switch="${#strings.toLowerCase(booking.status)}" class="font-semibold capitalize text-xs">
                                 <span th:case="'confirmed'" class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Confirmed</span>
                                 <span th:case="'pending'" class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Pending</span>
-                                <span th:case="*" class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full" th:text="${booking.status}"></span>
+                                <span th:case="'declined'" class="bg-rose-50 text-rose-700 px-3 py-1 rounded-full">Declined</span>
                             </span>
                     </div>
                 </div>
-                <div th:if="${bookings == null or #lists.isEmpty(bookings.?[!#strings.equalsIgnoreCase(status, 'cancelled')])}" class="text-center py-3.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+                <div th:if="${bookings == null or #lists.isEmpty(activeBookings)}" class="text-center py-3.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
                     <p class="text-sm font-medium text-slate-500">No active bookings.</p>
                 </div>
             </div>
