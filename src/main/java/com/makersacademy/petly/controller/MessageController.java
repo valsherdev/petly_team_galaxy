@@ -53,7 +53,7 @@ public class MessageController {
         model.addAttribute("currentUserId", currentUser.getId());
         model.addAttribute("user", currentUser);
 
-        return "/messages/index";
+        return "messages/index";
     }
 
     @GetMapping("/messages/{userId}")
@@ -69,7 +69,7 @@ public class MessageController {
         model.addAttribute("currentUserId", currentUser.getId());
         model.addAttribute("user", currentUser);
 
-        return "/messages/show";
+        return "messages/show";
     }
 
     @PostMapping("/messages/{userId}")
