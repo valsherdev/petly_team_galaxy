@@ -48,7 +48,8 @@
         </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
-        <tr th:each="booking : ${pendingBookings}" class="hover:bg-slate-50/80">
+        <tr th:each="booking : ${pendingBookings}" class="hover:bg-slate-50/80"
+            th:attr="data-testid='booking-row-' + ${booking.id}">
           <td class="py-4 px-4 font-semibold text-slate-900" th:text="${booking.service.name}"></td>
           <td class="py-4 px-4">
             <a th:href="@{/pets/{id}(id=${booking.pet.id})}" class="text-[#7794d1] hover:underline font-medium" th:text="${booking.pet.name}"></a>
@@ -105,7 +106,8 @@
         </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 text-sm text-slate-800">
-        <tr th:each="booking : ${confirmedBookings}" class="hover:bg-slate-50/80">
+        <tr th:each="booking : ${confirmedBookings}" class="hover:bg-slate-50/80"
+            th:attr="data-testid='booking-row-' + ${booking.id}">
           <td class="py-4 px-4 font-semibold text-slate-900" th:text="${booking.service.name}"></td>
           <td class="py-4 px-4">
             <a th:href="@{/pets/{id}(id=${booking.pet.id})}" class="text-[#7794d1] hover:underline font-medium" th:text="${booking.pet.name}"></a>

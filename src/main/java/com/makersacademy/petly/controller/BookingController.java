@@ -91,7 +91,7 @@ public class BookingController {
 
         Booking booking = new Booking(pet, service, start, end, owner,service.getProvider());
         bookingRepository.save(booking);
-        return new RedirectView("/dashboard/owner");
+        return new RedirectView("/dashboard/owner/bookings");
     }
 
     @GetMapping("/dashboard/provider/bookings")
@@ -152,6 +152,23 @@ public class BookingController {
         booking.setStatus("DECLINED");
         bookingRepository.save(booking);
         return new RedirectView("/dashboard/provider/bookings");
+    }
+
+    @PostMapping("/bookings/{id}/cancel")
+    public RedirectView cancelBooking(@PathVariable Long id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow();
+        User provider = getCurrentUser();
+
+        boolean isOwner = booking.getOwner() != null && booking.getOwner().getId().equals(getCurrentUser().getId());
+        boolean isProvider = booking.getProvider() != null && booking.getProvider().getId().equals(getCurrentUser().getId());
+
+        if (!isOwner && !isProvider) {
+            return new RedirectView("/dashboard/owner/bookings");
+        }
+
+        booking.setStatus("CANCELLED");
+        bookingRepository.save(booking);
+        return new RedirectView("/dashboard/owner/bookings");
     }
 
 
