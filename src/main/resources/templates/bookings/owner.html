@@ -142,9 +142,9 @@
     </section>
 
 
-    <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8">
+    <section id="booking-history" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8">
 
-        <div th:if="${rated}" class="mb-6 p-4 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-between shadow-sm">
+        <div th:if="${rated}" class="mb-6 p-4 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-center text-center shadow-sm">
             <div class="flex items-center gap-3">
                 <p class="text-sm font-semibold text-emerald-900">
                     Thank you for leaving
@@ -152,10 +152,6 @@
                     a <span class="font-bold text-amber-500" th:text="${ratingStars} + ' ★'">4 ★</span> review!
                 </p>
             </div>
-
-            <a th:href="@{/services}" class="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs h-8 px-3.5 rounded-xl shadow-sm transition active:scale-95">
-                Explore Services
-            </a>
         </div>
 
         <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">

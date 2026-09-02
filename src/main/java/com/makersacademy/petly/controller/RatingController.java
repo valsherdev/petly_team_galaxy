@@ -69,7 +69,7 @@ public class RatingController {
         redirectAttributes.addFlashAttribute("rated", true);
         redirectAttributes.addFlashAttribute("ratedServiceName", booking.getService().getName());
         redirectAttributes.addFlashAttribute("ratingStars", stars);
-        return new RedirectView("/dashboard/owner/bookings");
+        return new RedirectView("/dashboard/owner/bookings#booking-history");
     }
 
 
