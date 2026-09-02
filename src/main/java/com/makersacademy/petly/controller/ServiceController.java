@@ -102,6 +102,7 @@ public class ServiceController {
             }
         }
 
+
         services = services.stream()
                 .filter(s -> {
                     Double dist = distances.get(s.getId());
