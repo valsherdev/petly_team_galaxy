@@ -118,11 +118,14 @@ public class OwnerDashboardFeatureTest {
         jdbcTemplate.update("UPDATE users SET location = 'SW1A 1AA' WHERE username = ?", ownerEmail);
         driver.navigate().refresh();
 
-        WebElement header = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("h1")));
-        assertTrue(header.getText().contains("Welcome back, Alex Owner!"));
+        WebElement welcomeMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='welcome_message']")));
+        assertTrue(welcomeMessage.getText().contains("Welcome back, Alex Owner!"));
 
-        assertTrue(driver.getPageSource().contains("Alex Owner"));
-        assertTrue(driver.getPageSource().contains("SW1A 1AA"));
+        WebElement nameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='account_name']")));
+        WebElement locationElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='account_location']")));
+
+        assertEquals("Alex Owner", nameElement.getText());
+        assertEquals("SW1A 1AA", locationElement.getText());
     }
 
     @Test
@@ -135,8 +138,7 @@ public class OwnerDashboardFeatureTest {
         insertPet("Milo", "Cat", ownerId);
 
         driver.navigate().refresh();
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(), 'My Pets')]")));
+        driver.findElement(By.cssSelector("[data-testid='my_pets']"));
 
         assertTrue(driver.getPageSource().contains("Barney"));
         assertTrue(driver.getPageSource().contains("Milo"));
@@ -148,7 +150,8 @@ public class OwnerDashboardFeatureTest {
         String ownerEmail = faker.name().username() + "@email.com";
         signUpAs(ownerEmail, "PET_OWNER", "New Owner");
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("h1")));
+        driver.findElement(By.cssSelector("[data-testid='my_pets']"));
+        driver.findElement(By.cssSelector("[data-testid='my_bookings']"));
 
         assertTrue(driver.getPageSource().contains("No pets added."));
         assertTrue(driver.getPageSource().contains("No active bookings."));
@@ -169,7 +172,7 @@ public class OwnerDashboardFeatureTest {
         insertBooking(petId, serviceId, ownerId, providerId, "CONFIRMED");
 
         driver.navigate().refresh();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(), 'My Bookings')]")));
+        driver.findElement(By.cssSelector("[data-testid='my_bookings']"));
 
         assertTrue(driver.getPageSource().contains("Dog grooming"));
         assertTrue(driver.getPageSource().contains("Confirmed"));
@@ -192,8 +195,7 @@ public class OwnerDashboardFeatureTest {
         insertBooking(petId, cancelledService, ownerId, providerId, "CANCELLED");
 
         driver.navigate().refresh();
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(), 'My Bookings')]")));
+        driver.findElement(By.cssSelector("[data-testid='my_bookings']"));
 
         String pageSource = driver.getPageSource();
         assertFalse(pageSource.contains("Cancelled"));
@@ -215,13 +217,68 @@ public class OwnerDashboardFeatureTest {
         insertService("Overnight pet sitting", 60.00, "SW1A 1AA", providerId);
 
         driver.navigate().refresh();
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(), 'Services')]")));
+        driver.findElement(By.cssSelector("[data-testid='services']"));
 
         assertTrue(driver.getPageSource().contains("Dog grooming"));
         assertTrue(driver.getPageSource().contains("Overnight pet sitting"));
         assertTrue(driver.getPageSource().contains("£45"));
         assertTrue(driver.getPageSource().contains("£60"));
+    }
+
+    @Test
+    @DisplayName("Navigates to the add pet form when clicking Add a Pet button")
+    public void testAddPetButtonNavigatesToAddPetForm() {
+        String ownerEmail = faker.name().username().toLowerCase() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Alex Owner");
+
+        driver.navigate().refresh();
+
+        driver.findElement(By.cssSelector("[data-testid='add-a-pet-btn']")).click();
+
+        assertTrue(driver.getCurrentUrl().contains("/my-pets/add"));
+        assertTrue(driver.getPageSource().contains("Add Pet Profile"));
+    }
+
+    @Test
+    @DisplayName("Navigates to the bookings page when clicking My Bookings")
+    public void testMyBookingsButtonNavigatesToBookingsPage() {
+        String ownerEmail = faker.name().username().toLowerCase() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Alex Owner");
+
+        driver.navigate().refresh();
+
+        driver.findElement(By.cssSelector("[data-testid='view-bookings-btn']")).click();
+
+        assertTrue(driver.getCurrentUrl().contains("/dashboard/owner/bookings"));
+        assertTrue(driver.getPageSource().contains("My Bookings"));
+    }
+
+    @Test
+    @DisplayName("Navigates to the services page when clicking Browse Services")
+    public void testExploreServiceButtonNavigatesToServicesPage() {
+        String ownerEmail = faker.name().username().toLowerCase() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Alex Owner");
+
+        driver.navigate().refresh();
+
+        driver.findElement(By.cssSelector("[data-testid='explore-services-btn']")).click();
+
+        assertTrue(driver.getCurrentUrl().contains("/services"));
+        assertTrue(driver.getPageSource().contains("Browse Services"));
+    }
+
+    @Test
+    @DisplayName("Navigates to the profile page when clicking Manage Profile")
+    public void testManageProfileButtonNavigatesToProfilePage() {
+        String ownerEmail = faker.name().username().toLowerCase() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Alex Owner");
+
+        driver.navigate().refresh();
+
+        driver.findElement(By.cssSelector("[data-testid='manage-profile-btn']")).click();
+
+        assertTrue(driver.getCurrentUrl().contains("/profile"));
+        assertTrue(driver.getPageSource().contains("My Profile"));
     }
 }
 
