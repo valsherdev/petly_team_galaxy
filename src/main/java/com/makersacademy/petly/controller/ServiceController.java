@@ -105,7 +105,7 @@ public class ServiceController {
         services = services.stream()
                 .filter(s -> {
                     Double dist = distances.get(s.getId());
-                    return dist != null && dist <= maxKm;
+                    return dist == null || dist <= maxKm;
                 })
                 .collect(Collectors.toList());
 

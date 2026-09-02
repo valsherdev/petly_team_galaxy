@@ -141,9 +141,9 @@ public class RatingFeatureTest {
                 "2020-01-01 09:00:00", "2020-01-01 09:30:00", "CONFIRMED");
 
         driver.get("http://localhost:8081/bookings/" + bookingId + "/rate");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("stars")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='star5']")));
 
-        new Select(driver.findElement(By.name("stars"))).selectByValue("5");
+        driver.findElement(By.cssSelector("label[for='star5']")).click();
         driver.findElement(
                 By.cssSelector("form[action='/bookings/" + bookingId + "/rate'] button[type='submit']")).click();
 
