@@ -60,6 +60,22 @@ public class ProfileController {
         return new RedirectView("/profile");
     }
 
+    @PostMapping("/profile/name")
+    public RedirectView updateName(@RequestParam String name, RedirectAttributes redirectAttributes) {
+
+        User currentUser = getCurrentUser();
+
+        currentUser.setName(name);
+        userRepository.save(currentUser);
+
+        redirectAttributes.addFlashAttribute(
+                "nameSuccess",
+                "Name updated successfully!"
+        );
+
+        return new RedirectView("/profile");
+    }
+
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
