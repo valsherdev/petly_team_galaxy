@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rate Service - Petly</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
+
+<main>
+    <h1>Rate this service</h1>
+    <p th:text="${booking.service.name}"></p>
+
+    <form th:action="@{/bookings/{id}/rate(id=${booking.id})}" method="POST">
+        <label for="stars">Your rating:</label>
+        <select id="stars" name="stars" required>
+            <option value="5">★★★★★ (5)</option>
+            <option value="4">★★★★☆ (4)</option>
+            <option value="3">★★★☆☆ (3)</option>
+            <option value="2">★★☆☆☆ (2)</option>
+            <option value="1">★☆☆☆☆ (1)</option>
+        </select>
+
+        <br/><br/>
+        <button type="submit">Submit Rating</button>
+    </form>
+</main>
+</body>
+</html>

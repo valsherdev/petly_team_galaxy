@@ -2,6 +2,7 @@ package com.makersacademy.petly.controller;
 
 import com.makersacademy.petly.model.Service;
 import com.makersacademy.petly.model.User;
+import com.makersacademy.petly.repository.RatingRepository;
 import com.makersacademy.petly.repository.ServiceRepository;
 import com.makersacademy.petly.repository.UserRepository;
 import com.makersacademy.petly.PostcodeService;
@@ -33,6 +34,10 @@ public class ServiceController {
 
     @Autowired
     private DistanceService distanceService;
+
+    @Autowired
+    private RatingRepository ratingRepository;
+
 
     @GetMapping("/services")
     public String listServices(@RequestParam(required = false) String type, Model model) {
@@ -82,10 +87,25 @@ public class ServiceController {
             });
         }
 
+
+        Map<Long, Double> avgRatingByServiceId = new HashMap<>();
+        Map<Long, Long> ratingCountByServiceId = new HashMap<>();
+
+        for (Service service: services) {
+            long count = ratingRepository.countByServiceId(service.getId());
+            if (count > 0) {
+                Double averageRating = ratingRepository.findAverageStarsByServiceId(service.getId());
+                avgRatingByServiceId.put(service.getId(), averageRating);
+                ratingCountByServiceId.put(service.getId(), count);
+            }
+        }
+
         model.addAttribute("services", services);
         model.addAttribute("selectedType", type);
         model.addAttribute("user", user);
         model.addAttribute("distances", distances);
+        model.addAttribute("avgRatingByServiceId", avgRatingByServiceId);
+        model.addAttribute("ratingCountByServiceId", ratingCountByServiceId);
         return "services/list";
     }
 
