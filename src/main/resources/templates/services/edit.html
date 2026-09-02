@@ -48,7 +48,7 @@
 
                 <div>
                     <label for="duration" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Duration (in minutes, optional)</label>
-                    <input type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1"
+                    <input data-testid="duration" type="number" id="duration" th:field="*{durationMinutes}" placeholder="e.g. 60" min="1"
                            class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400" />
                 </div>
 
@@ -70,9 +70,9 @@
 
                 <div>
                     <label for="location" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Postcode</label>
-                    <input type="text" id="location" th:field="*{location}" placeholder="e.g. SW1A 1AA" required
+                    <input data-testid="service-location" type="text" id="location" th:field="*{location}" placeholder="e.g. SW1A 1AA" required
                            class="w-full px-3.5 py-2.5 bg-white border border-[#cad5ed] rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#7794d1] focus:border-transparent transition-all placeholder:text-slate-400" />
-                    <p th:if="${postcodeError}" th:text="${postcodeError}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+                    <p data-testid="postcode-error" th:if="${postcodeError}" th:text="${postcodeError}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
             </div>
 
             <div class="flex items-center gap-4 pt-2">
-                <button type="submit"
+                <button data-testid="save-changes-btn" type="submit"
                         class="bg-[#7794d1] hover:bg-[#5e7bb8] text-white font-semibold text-sm py-3 px-8 rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer">
                     Save Changes
                 </button>
