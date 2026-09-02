@@ -12,7 +12,7 @@ public class ServiceTest {
 
     private User provider = new User("provider@example.com");
     private Service service = new Service(provider, "Dog Grooming", "GROOMING",
-            new BigDecimal("40.00"), "FIXED", "Central London", "Full wash and trim");
+            new BigDecimal("40.00"), "FIXED", "SW1A 1AA", "Full wash and trim");
 
     @Test
     public void serviceHasProvider() {
@@ -37,7 +37,7 @@ public class ServiceTest {
 
     @Test
     public void serviceHasLocationAndDescription() {
-        assertThat(service.getLocation(), containsString("London"));
+        assertThat(service.getLocation(), containsString("SW1A 1AA"));
         assertThat(service.getDescription(), containsString("wash and trim"));
     }
 
@@ -67,6 +67,21 @@ public class ServiceTest {
 
         assertThat(service.getDurationMinutes(), is(120));
         assertThat(service.getDuration(), is(Duration.ofHours(2)));
+    }
+
+    @Test
+    public void serviceStoresLatitudeAndLongitudeFromAPI() {
+        service.setLatitude(51.50101);
+        service.setLongitude(-0.141563);
+
+        assertThat(service.getLatitude(), is(51.50101));
+        assertThat(service.getLongitude(), is(-0.141563));
+    }
+
+    @Test
+    public void latitudeAndLongitudeCanBeNull() {
+        assertThat(service.getLatitude(), is(nullValue()));
+        assertThat(service.getLongitude(), is(nullValue()));
     }
 
 }
