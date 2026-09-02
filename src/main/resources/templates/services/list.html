@@ -31,15 +31,41 @@
 
         <section>
             <nav class="flex flex-wrap gap-2 text-sm font-medium">
-                <a th:href="@{/services}"
-                   class="px-4 py-2 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 transition-colors">All</a>
-                <a th:href="@{/services(type='PET_CARE')}"
-                   class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">Pet Care</a>
-                <a th:href="@{/services(type='GROOMING')}"
-                   class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">Grooming</a>
-                <a th:href="@{/services(type='VETERINARY')}"
-                   class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">Veterinary</a>
+                <a th:href="@{/services(maxKm=${maxKm})}"
+                   th:classappend="${selectedType == null || selectedType.isBlank()} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                   class="px-4 py-2 rounded-full transition-colors">All</a>
+                <a th:href="@{/services(type='PET_CARE', maxKm=${maxKm})}"
+                   th:classappend="${selectedType == 'PET_CARE'} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                   class="px-4 py-2 rounded-full transition-colors">Pet Care</a>
+                <a th:href="@{/services(type='GROOMING', maxKm=${maxKm})}"
+                   th:classappend="${selectedType == 'GROOMING'} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                   class="px-4 py-2 rounded-full transition-colors">Grooming</a>
+                <a th:href="@{/services(type='VETERINARY', maxKm=${maxKm})}"
+                   th:classappend="${selectedType == 'VETERINARY'} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                   class="px-4 py-2 rounded-full transition-colors">Veterinary</a>
             </nav>
+
+            <form method="GET" th:action="@{/services}" class="py-4 flex flex-wrap gap-2 text-sm font-medium">
+                <input type="hidden" name="type" th:value="${selectedType}" />
+
+                <select name="maxKm" onchange="this.form.submit()"
+                        th:classappend="${maxKm != null && maxKm < 1000.0} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                        class="px-3 py-2 rounded-full border-none cursor-pointer focus:ring-2 focus:ring-emerald-500">
+                    <option value="1000.0" th:selected="${maxKm == 1000.0 || maxKm == null}">All Distances</option>
+                    <option value="5" th:selected="${maxKm == 5.0}">Within 5km</option>
+                    <option value="10" th:selected="${maxKm == 10.0}">Within 10km</option>
+                    <option value="15" th:selected="${maxKm == 15.0}">Within 15km</option>
+                    <option value="20" th:selected="${maxKm == 20.0}">Within 20km</option>
+                    <option value="30" th:selected="${maxKm == 30.0}">Within 30km</option>
+                    <option value="40" th:selected="${maxKm == 40.0}">Within 40km</option>
+                    <option value="50" th:selected="${maxKm == 50.0}">Within 50km</option>
+                    <option value="60" th:selected="${maxKm == 60.0}">Within 60km</option>
+                    <option value="70" th:selected="${maxKm == 70.0}">Within 70km</option>
+                    <option value="80" th:selected="${maxKm == 80.0}">Within 80km</option>
+                    <option value="90" th:selected="${maxKm == 90.0}">Within 90km</option>
+                    <option value="100" th:selected="${maxKm == 100.0}">Within 100km</option>
+                </select>
+            </form>
         </section>
 
         <section>
