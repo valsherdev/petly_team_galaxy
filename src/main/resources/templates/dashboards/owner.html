@@ -14,7 +14,7 @@
     <main class="flex-1 flex flex-col flex-grow w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 
     <header class="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-white border border-emerald-200/80 rounded-2xl p-5 flex items-center justify-between shadow-sm">
-        <div>
+        <div data-testid="welcome_message">
             <h1 class="text-3xl font-bold text-slate-800">
                 Welcome back, <span th:text="${user.name}" class="text-[#009866]"></span>!
             </h1>
@@ -27,7 +27,7 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
             <div>
                 <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
-                    <h2 class="font-bold text-slate-800 text-lg">🐶 My Pets</h2>
+                    <h2 data-testid="my_pets" class="font-bold text-slate-800 text-lg">🐶 My Pets</h2>
                     <a th:href="@{/my-pets}" class="text-sm font-semibold text-emerald-600 hover:underline">All →</a>
                 </div>
                 <div th:if="${pets != null and !#lists.isEmpty(pets)}" class="space-y-2.5">
@@ -40,7 +40,7 @@
                     <p class="text-sm font-medium text-slate-500">No pets added.</p>
                 </div>
             </div>
-            <a th:href="@{/my-pets/add}" class="w-full text-center bg-[#009866] hover:bg-emerald-700 text-white font-bold text-sm py-2.5 rounded-xl transition-all shadow-sm mt-4">
+            <a th:href="@{/my-pets/add}" data-testid="add-a-pet-btn" class="w-full text-center bg-[#009866] hover:bg-emerald-700 text-white font-bold text-sm py-2.5 rounded-xl transition-all shadow-sm mt-4">
                 + Add A Pet
             </a>
         </div>
@@ -49,7 +49,7 @@
              th:with="activeBookings=${bookings != null ? bookings.?[status != null and !status.equalsIgnoreCase('cancelled')] : null}">
             <div>
                 <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
-                    <h2 class="font-bold text-slate-800 text-lg">📅 My Bookings</h2>
+                    <h2 data-testid="my_bookings" class="font-bold text-slate-800 text-lg">📅 My Bookings</h2>
                     <a th:href="@{/dashboard/owner/bookings}" class="text-sm font-semibold text-emerald-600 hover:underline">All →</a>
                 </div>
                 <div th:if="${bookings != null and !#lists.isEmpty(activeBookings)}" class="space-y-2.5">
@@ -67,7 +67,7 @@
                     <p class="text-sm font-medium text-slate-500">No active bookings.</p>
                 </div>
             </div>
-            <a th:href="@{/dashboard/owner/bookings}" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
+            <a th:href="@{/dashboard/owner/bookings}" data-testid="view-bookings-btn" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
                 View Bookings
             </a>
         </div>
@@ -75,7 +75,7 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
             <div>
                 <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
-                    <h2 class="font-bold text-slate-800 text-lg"> ✂️ Services</h2>
+                    <h2 data-testid="services" class="font-bold text-slate-800 text-lg"> ✂️ Services</h2>
                     <a th:href="@{/services}" class="text-sm font-semibold text-emerald-600 hover:underline">Browse →</a>
                 </div>
                 <div th:if="${services != null and !#lists.isEmpty(services)}" class="space-y-2.5">
@@ -88,12 +88,12 @@
                     <p class="text-sm font-medium text-slate-500">No services found.</p>
                 </div>
             </div>
-            <a th:href="@{/services}" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
+            <a th:href="@{/services}" data-testid="explore-services-btn" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
                 Explore Services
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div data-testid="account_details" class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
             <div>
                 <div class="flex justify-between items-center border-b pb-2.5 mb-3.5">
                     <h2 class="font-bold text-slate-800 text-lg">👤 Account Details</h2>
@@ -102,15 +102,15 @@
                 <div class="space-y-2.5 text-base">
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
                         <span class="text-xs text-slate-400 font-bold">NAME</span>
-                        <span class="font-bold text-slate-800" th:text="${user.name}"></span>
+                        <span data-testid="account_name" class="font-bold text-slate-800" th:text="${user.name}"></span>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
                         <span class="text-xs text-slate-400 font-bold">LOCATION</span>
-                        <span class="font-bold text-slate-800" th:text="${user.location != null and !user.location.isEmpty()} ? ${user.location} : 'Not set'"></span>
+                        <span data-testid="account_location" class="font-bold text-slate-800" th:text="${user.location != null and !user.location.isEmpty()} ? ${user.location} : 'Not set'"></span>
                     </div>
                 </div>
             </div>
-            <a th:href="@{/profile}" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
+            <a th:href="@{/profile}" data-testid="manage-profile-btn" class="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-2.5 rounded-xl transition-all border border-slate-200 mt-4">
                 Manage Profile
             </a>
         </div>
