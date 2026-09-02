@@ -8,18 +8,26 @@ We are in our third and final project of the Makers Software Engineering bootcam
 
 Petly is a platform connection pet owners with services for pets. Think of it as a one stop shop for pet needs.
 
-The application uses:
-  - `maven` to build the project
-  - `thymeleaf` for templating
-  - `flyway` to manage `postgres` db migrations
-  - `selenium` for feature testing
-  - `faker` to generate fake names for testing
-  - `junit4` for unit testing
-  - `auth0` and `spring-security` for authentication and user management
-  - `lombok` to generate getters and setters for us
-  - `tailwind` for styling the pages
-  
-Below, you'll find specific learning objectives for each tool.
+## Existing features
+
+This app has these features implemented
+* A user can sign up using Auth0
+* A signed up user can sign in
+* A signed in user then has to choose whether they are using the app as a Pet Owner or Service Provider on the account
+* There are 2 different user experiences when choosing your role type - As a service provider you can:
+  * Create a service using a form
+  * Edit the service and delete the service
+  * See booking requests - both pending and confirmed, service provider can accept or decline
+  * See messages from pet owners about a service
+
+  And as a Pet Owner:
+  * Create a Pet using a form (multiple if you so wish)
+  * Edit and remove a pet
+  * See services - search by type of service needed which will bring up distance to pet owner location from nearest to furthest away
+  * Book a service - request sent to book a service which will either be approved or declined
+  * Message function to message a service if more information is needed or any questions
+
+# Setup
 
 ## QuickStart Instructions
 
@@ -57,35 +65,20 @@ Selenium uses Chromedriver to interact with the Chrome browser. If you're on a M
 
 Your Mac might refuse to open Chromedriver because it's from an unidentified developer. If you see a popup at that point, dismiss it by selecting `Cancel`, then go to `System Preferences`, `Security and Privacy`, `General`. You should see a message telling you that Chromedriver was blocked and, if so, there will be an `Open Anyway` button. Click that and then re-try your tests.
 
-## Existing features
-
-This app has these features implemented
-* A user can sign up using Auth0
-* A signed up user can sign in
-* A signed in user then has to choose whether they are using the app as a Pet Owner or Service Provider on the account
-* There are 2 different user experiences when choosing your role type - As a service provider you can:
-  * Create a service using a form
-  * Edit the service and delete the service
-  * See booking requests - both pending and confirmed, service provider can accept or decline
-  * See messages from pet owners about a service
-  
-  And as a Pet Owner:
-  * Create a Pet using a form (multiple if you so wish)
-  * Edit and remove a pet
-  * See services - search by type of service needed which will bring up distance to pet owner location from nearest to furthest away
-  * Book a service - request sent to book a service which will either be approved or declined
-  * Message function to message a service if more information is needed or any questions
-  
-
-### What is Auth0?
-Auth0 is a service that handles user authentication and authorisation for you, it will store data related to that such
-as username, passwords, 2 factor codes, oauth details (e.g. log in with google) etc, but you still need to store all the information you want to
-about the user e.g. favourite ice cream flavour, pet name etc. It’s not a database of users, it’s an auth handling service.
-
-Using a third-party service means you don’t have to worry about protecting critical information like login data and gives
-you automatic features like oauth integration for free. This can save businesses a lot of time and money.
 
 ## Design
+
+The application uses:
+- `maven` to build the project
+- `thymeleaf` for templating
+- `flyway` to manage `postgres` db migrations
+- `selenium` for feature testing
+- `faker` to generate fake names for testing
+- `junit4` for unit testing
+- `auth0` and `spring-security` for authentication and user management
+- `lombok` to generate getters and setters for us
+- `tailwind` for styling the pages
+
 
 
 
