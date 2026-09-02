@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ServiceController {
@@ -40,7 +41,8 @@ public class ServiceController {
 
 
     @GetMapping("/services")
-    public String listServices(@RequestParam(required = false) String type, Model model) {
+    public String listServices(@RequestParam(required = false) String type,
+                               @RequestParam(defaultValue = "1000") double maxKm, Model model) {
 
         User user = getCurrentUser();
         List<Service> services = (type == null || type.isBlank())
@@ -100,12 +102,22 @@ public class ServiceController {
             }
         }
 
+        services = services.stream()
+                .filter(s -> {
+                    Double dist = distances.get(s.getId());
+                    return dist != null && dist <= maxKm;
+                })
+                .collect(Collectors.toList());
+
+
+
         model.addAttribute("services", services);
         model.addAttribute("selectedType", type);
         model.addAttribute("user", user);
         model.addAttribute("distances", distances);
         model.addAttribute("avgRatingByServiceId", avgRatingByServiceId);
         model.addAttribute("ratingCountByServiceId", ratingCountByServiceId);
+        model.addAttribute("maxKm", maxKm);
         return "services/list";
     }
 
