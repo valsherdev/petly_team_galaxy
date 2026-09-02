@@ -171,10 +171,20 @@
                     <td class="py-4 px-4 text-xs font-medium text-slate-600 whitespace-nowrap" th:text="${#temporals.format(booking.startTime, 'dd MMM yyyy HH:mm')}"></td>
                     <td class="py-4 px-4 text-xs font-medium text-slate-600 whitespace-nowrap" th:text="${#temporals.format(booking.endTime, 'dd MMM yyyy HH:mm')}"></td>
                     <td class="py-4 px-4 text-right whitespace-nowrap">
-                        <a th:href="@{/services/{id}/book(id=${booking.service.id})}"
-                           class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-1.5 px-3.5 rounded-lg shadow-sm">
-                            Book again
-                        </a>
+                        <div class="flex items-center justify-end gap-2">
+                             <a th:href="@{/services/{id}/book(id=${booking.service.id})}"
+                                class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-1.5 px-3.5 rounded-lg shadow-sm">
+                                Book again
+                             </a>
+                             <a th:if="${ratingByBookingId.get(booking.id)} == null"
+                                th:href="@{/bookings/{id}/rate(id=${booking.id})}"
+                                class="inline-block bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold text-xs py-1.5 px-3.5 rounded-lg border border-amber-200">
+                                Leave a rating
+                             </a>
+                             <span th:if="${ratingByBookingId.get(booking.id)} != null"
+                                  class="inline-flex items-center text-xs font-bold text-amber-600"
+                                  th:text="${ratingByBookingId.get(booking.id)} + ' ★'"></span>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
