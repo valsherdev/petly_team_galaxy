@@ -8,22 +8,64 @@
 <body>
 <div th:replace="~{fragments/navbars :: navbar_pet_owner}"></div>
 
-<main>
-    <h1>Rate this service</h1>
-    <p th:text="${booking.service.name}"></p>
+<!--<main>-->
+<!--    <h1>Rate this service</h1>-->
+<!--    <p th:text="${booking.service.name}"></p>-->
 
-    <form th:action="@{/bookings/{id}/rate(id=${booking.id})}" method="POST">
-        <label for="stars">Your rating:</label>
-        <select id="stars" name="stars" required>
-            <option value="5">★★★★★ (5)</option>
-            <option value="4">★★★★☆ (4)</option>
-            <option value="3">★★★☆☆ (3)</option>
-            <option value="2">★★☆☆☆ (2)</option>
-            <option value="1">★☆☆☆☆ (1)</option>
-        </select>
+<!--    <form th:action="@{/bookings/{id}/rate(id=${booking.id})}" method="POST">-->
+<!--        <label for="stars">Your rating:</label>-->
+<!--        <select id="stars" name="stars" required>-->
+<!--            <option value="5">★★★★★ (5)</option>-->
+<!--            <option value="4">★★★★☆ (4)</option>-->
+<!--            <option value="3">★★★☆☆ (3)</option>-->
+<!--            <option value="2">★★☆☆☆ (2)</option>-->
+<!--            <option value="1">★☆☆☆☆ (1)</option>-->
+<!--        </select>-->
 
-        <br/><br/>
-        <button type="submit">Submit Rating</button>
+<!--        <br/><br/>-->
+<!--        <button type="submit">Submit Rating</button>-->
+<!--    </form>-->
+<!--</main>-->
+
+<main class="max-w-md mx-auto my-12 p-8 bg-white/90 border border-emerald-100 rounded-3xl shadow-sm">
+    <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl mb-3 text-xl">
+            🐾
+        </div>
+        <h1 class="text-2xl font-bold text-slate-800">Rate this service</h1>
+        <p class="text-sm font-medium text-slate-500 mt-1" th:text="${booking.service.name}"></p>
+    </div>
+
+    <form th:action="@{/bookings/{id}/rate(id=${booking.id})}" method="POST" class="space-y-6">
+
+        <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100/60 text-center">
+            <label class="block text-xs font-bold text-emerald-800 uppercase tracking-wider mb-3">
+                How was your experience?
+            </label>
+
+            <div class="flex justify-center flex-row-reverse gap-1 text-2xl" id="star-rating">
+
+                <input type="radio" id="star5" name="stars" value="5" class="peer/5 hidden" required />
+                <label for="star5" class="cursor-pointer text-slate-300 hover:text-amber-400 peer-hover/5:text-amber-400 peer-checked/5:text-amber-400">★</label>
+
+                <input type="radio" id="star4" name="stars" value="4" class="peer/4 hidden" />
+                <label for="star4" class="cursor-pointer text-slate-300 hover:text-amber-400 peer-hover/4:text-amber-400 peer-checked/4:text-amber-400 peer-checked/5:text-amber-400">★</label>
+
+                <input type="radio" id="star3" name="stars" value="3" class="peer/3 hidden" />
+                <label for="star3" class="cursor-pointer text-slate-300 hover:text-amber-300 peer-hover/3:text-amber-400 peer-checked/3:text-amber-400 peer-checked/4:text-amber-400 peer-checked/5:text-amber-400">★</label>
+
+                <input type="radio" id="star2" name="stars" value="2" class="peer/2 hidden" />
+                <label for="star2" class="cursor-pointer text-slate-300 hover:text-amber-400 peer-hover/2:text-amber-400 peer-checked/2:text-amber-400 peer-checked/3:text-amber-400 peer-checked/4:text-amber-400 peer-checked/5:text-amber-400">★</label>
+
+                <input type="radio" id="star1" name="stars" value="1" class="peer/1 hidden" />
+                <label for="star1" class="cursor-pointer text-slate-300 hover:text-amber-400 peer-hover/1:text-amber-400 peer-checked/1:text-amber-400 peer-checked/2:text-amber-400 peer-checked/3:text-amber-400 peer-checked/4:text-amber-400 peer-checked/5:text-amber-400">★</label>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3.5 rounded-2xl shadow-sm active:scale-95">
+            Submit Rating
+        </button>
     </form>
 </main>
 </body>

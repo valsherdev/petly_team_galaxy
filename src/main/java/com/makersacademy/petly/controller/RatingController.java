@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ public class RatingController {
 
     @PostMapping("/bookings/{id}/rate")
     public RedirectView createRating(@PathVariable Long id,
-                                     @RequestParam Integer stars) {
+                                     @RequestParam Integer stars, RedirectAttributes redirectAttributes) {
 
         Booking booking = bookingRepository.findById(id).orElseThrow();
         User currentUser = getCurrentUser();
@@ -64,6 +65,10 @@ public class RatingController {
 
         Rating rating = new Rating(booking, booking.getService(), currentUser, stars);
         ratingRepository.save(rating);
+
+        redirectAttributes.addFlashAttribute("rated", true);
+        redirectAttributes.addFlashAttribute("ratedServiceName", booking.getService().getName());
+        redirectAttributes.addFlashAttribute("ratingStars", stars);
         return new RedirectView("/dashboard/owner/bookings");
     }
 
