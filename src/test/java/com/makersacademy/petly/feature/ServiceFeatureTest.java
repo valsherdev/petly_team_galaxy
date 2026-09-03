@@ -101,6 +101,11 @@ public class ServiceFeatureTest {
                 Integer.class, providerId, name);
     }
 
+    private String serviceNameFor(Long serviceId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT name FROM services WHERE id = ?", String.class, serviceId);
+    }
+
 
     @Test
     public void providerCanCreateService() {
@@ -109,19 +114,24 @@ public class ServiceFeatureTest {
 
         String serviceName = "Feature Test Grooming " + faker.number().digits(6);
 
-        driver.findElement(By.name("name")).sendKeys(serviceName);
 
-        new org.openqa.selenium.support.ui.Select(driver.findElement(By.name("type")))
+        String createFormSelector = "form[action='/services/create'] ";
+
+        driver.findElement(By.cssSelector(createFormSelector + "input[name='name']")).sendKeys(serviceName);
+
+        new org.openqa.selenium.support.ui.Select(
+                driver.findElement(By.cssSelector(createFormSelector + "select[name='type']")))
                 .selectByValue("GROOMING");
 
-        driver.findElement(By.name("price")).sendKeys("35.00");
+        driver.findElement(By.cssSelector(createFormSelector + "input[name='price']")).sendKeys("35.00");
 
-        new org.openqa.selenium.support.ui.Select(driver.findElement(By.name("priceUnit")))
+        new org.openqa.selenium.support.ui.Select(
+                driver.findElement(By.cssSelector(createFormSelector + "select[name='priceUnit']")))
                 .selectByValue("FIXED");
 
-        driver.findElement(By.name("description")).sendKeys("A test grooming service");
-        driver.findElement(By.name("location")).sendKeys("SW1A 1AA");
-        driver.findElement(By.cssSelector("form[action='/services/create'] button[type='submit']")).click();
+        driver.findElement(By.cssSelector(createFormSelector + "textarea[name='description']")).sendKeys("A test grooming service");
+        driver.findElement(By.cssSelector(createFormSelector + "input[name='location']")).sendKeys("SW1A 1AA");
+        driver.findElement(By.cssSelector(createFormSelector + "button[type='submit']")).click();
 
         Long providerId = jdbcTemplate.queryForObject(
                 "SELECT id FROM users WHERE username = ?", Long.class, email);
@@ -149,5 +159,68 @@ public class ServiceFeatureTest {
 
         await().atMost(5, java.util.concurrent.TimeUnit.SECONDS)
                 .untilAsserted(() -> assertEquals(0, serviceCountFor(providerId, serviceName)));
+    }
+
+
+    @Test
+    public void ownerCanSeeExistingServiceOnBrowsePage() {
+        Long providerId = insertProvider(faker.name().username() + "@email.com", "Happy Paws");
+        String serviceName = "Seeded Dog Walking " + faker.number().digits(6);
+        insertService(providerId, serviceName, "PET_CARE", "PER_HOUR", "A seeded service for testing");
+
+        String ownerEmail = faker.name().username() + "@email.com";
+        signUpAs(ownerEmail, "PET_OWNER", "Test Owner");
+
+        driver.get("http://localhost:8081/services");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
+
+        String pageText = driver.findElement(By.tagName("body")).getText();
+        assertTrue(pageText.contains(serviceName));
+    }
+
+    @Test
+    public void providerCanEditTheirOwnService() {
+        String email = faker.name().username() + "@email.com";
+        Long providerId = signUpAs(email, "SERVICE_PROVIDER", "Test Provider");
+
+        String originalName = "Original Name " + faker.number().digits(6);
+        Long serviceId = insertService(providerId, originalName, "GROOMING", "FIXED", "Before edit");
+
+        driver.get("http://localhost:8081/dashboard/provider");
+        driver.findElement(By.cssSelector("a[href='/services/" + serviceId + "/edit']")).click();
+
+        String updateFormSelector = "form[action='/services/" + serviceId + "/update'] ";
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(updateFormSelector + "input[name='name']")));
+
+        String updatedName = "Updated Name " + faker.number().digits(6);
+        org.openqa.selenium.WebElement nameField = driver.findElement(By.cssSelector(updateFormSelector + "input[name='name']"));
+        nameField.clear();
+        nameField.sendKeys(updatedName);
+
+        org.openqa.selenium.WebElement locationField = driver.findElement(By.cssSelector(updateFormSelector + "input[name='location']"));
+        locationField.clear();
+        locationField.sendKeys("SW1A 1AA");
+
+        driver.findElement(By.cssSelector(updateFormSelector + "button[type='submit']")).click();
+
+        await().atMost(5, java.util.concurrent.TimeUnit.SECONDS)
+                .untilAsserted(() -> assertEquals(updatedName, serviceNameFor(serviceId)));
+    }
+
+
+    @Test
+    public void providerCannotEditAnotherProvidersService() {
+        String email = faker.name().username() + "@email.com";
+        signUpAs(email, "SERVICE_PROVIDER", "Provider A");
+
+        Long otherProviderId = insertProvider(faker.name().username() + "@email.com", "Provider B");
+        String originalName = "Provider B's Service " + faker.number().digits(6);
+        Long otherServiceId = insertService(otherProviderId, originalName, "VETERINARY", "PER_HOUR", "Not Provider A's");
+
+        
+        driver.get("http://localhost:8081/services/" + otherServiceId + "/edit");
+
+        wait.until(ExpectedConditions.urlContains("/dashboard/provider"));
+        assertEquals(originalName, serviceNameFor(otherServiceId));
     }
 }

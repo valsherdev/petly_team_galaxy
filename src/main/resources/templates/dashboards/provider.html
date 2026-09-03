@@ -106,14 +106,14 @@
                     <div>
                         <div class="flex items-start justify-between gap-2 mb-1">
                             <h3 class="font-bold text-slate-800 text-base" th:text="${service.name}"></h3>
-                            <span class="text-[10px] font-bold text-[#7794d1] bg-[#cad5ed]/40 border border-[#cad5ed] px-2 py-0.5 rounded-full uppercase" th:text="${service.type}"></span>
+                            <span class="text-[10px] font-bold text-[#7794d1] bg-[#cad5ed]/40 border border-[#cad5ed] px-2 py-0.5 rounded-full uppercase" th:text="${#strings.replace(service.type, '_', ' ')}"></span>
                         </div>
                         <p class="text-xs text-slate-600 mb-3 line-clamp-2" th:text="${service.description}"></p>
 
                         <div class="text-xs bg-[#cad5ed]/30 p-2.5 rounded-xl space-y-1 mb-3">
                             <p class="flex justify-between">
                                 <span class="text-slate-500">Price:</span>
-                                <span class="font-bold text-slate-800">£<span th:text="${service.price}"></span> / <span th:text="${service.priceUnit}"></span></span>
+                                <span class="font-bold text-slate-800">£<span th:text="${service.price}"></span> / <span th:text="${#strings.replace(service.priceUnit, '_', ' ')}"></span></span>
                             </p>
                             <p class="flex justify-between" th:if="${service.location}">
                                 <span class="text-slate-500">Location:</span>
