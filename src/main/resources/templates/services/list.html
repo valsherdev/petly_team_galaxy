@@ -34,7 +34,7 @@
                 <a th:href="@{/services(maxKm=${maxKm})}"
                    th:classappend="${selectedType == null || selectedType.isBlank()} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                    class="px-4 py-2 rounded-full transition-colors">All</a>
-                <a th:href="@{/services(type='PET_CARE', maxKm=${maxKm})}"
+                <a data-testid="pet-care-filter" th:href="@{/services(type='PET_CARE', maxKm=${maxKm})}"
                    th:classappend="${selectedType == 'PET_CARE'} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                    class="px-4 py-2 rounded-full transition-colors">Pet Care</a>
                 <a th:href="@{/services(type='GROOMING', maxKm=${maxKm})}"
@@ -50,7 +50,7 @@
                   method="GET" th:action="@{/services}" class="py-4 flex flex-wrap gap-2 text-sm font-medium">
                 <input type="hidden" name="type" th:value="${selectedType}" />
 
-                <select name="maxKm" onchange="this.form.submit()"
+                <select data-testid="distance-filter" name="maxKm" onchange="this.form.submit()"
                         th:classappend="${maxKm != null && maxKm < 1000.0} ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                         class="px-3 py-2 rounded-full border-none cursor-pointer focus:ring-2 focus:ring-emerald-500">
                     <option value="1000.0" th:selected="${maxKm == 1000.0 || maxKm == null}">All Distances</option>
@@ -71,7 +71,7 @@
         </section>
 
         <section>
-            <div th:if="${not #lists.isEmpty(services)}"
+            <div data-testid="service-list-card" th:if="${not #lists.isEmpty(services)}"
                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <article th:each="service : ${services}"
                          class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
@@ -104,7 +104,7 @@
                             </div>
 
                             <div class="flex items-center justify-between">
-                                <span class="font-semibold text-slate-400 flex items-center gap-1.5">📍 Location</span>
+                                <span data-testid="location-text" class="font-semibold text-slate-400 flex items-center gap-1.5">📍 Location</span>
                                 <div class="text-right">
                                     <span class="font-bold text-slate-800 text-sm"><span th:text="${service.location}"></span></span>
                                 </div>
