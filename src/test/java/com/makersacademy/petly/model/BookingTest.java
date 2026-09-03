@@ -18,7 +18,7 @@ public class BookingTest {
     private User provider = new User("provider@example.com");
     private Pet pet = new Pet();
     private Service service = new Service(provider, "Dog Boarding", "PET_CARE",
-            new BigDecimal("25.00"), "PER_DAY", "London", "Overnight boarding");
+            new BigDecimal("25.00"), "PER_DAY", "SW1A 1AA", "Overnight boarding");
     private LocalDateTime startTime = LocalDateTime.of(2026, 9, 1, 9, 0);
     private LocalDateTime endTime = LocalDateTime.of(2026, 9, 2, 9, 0);
     private Booking booking = new Booking(pet, service, startTime, endTime, owner, provider);
