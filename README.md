@@ -11,7 +11,7 @@ We are in our third and final project of the Makers Software Engineering bootcam
 
 ### What is Petly?
 
-Petly is a platform connection pet owners with services for pets. Think of it as a one stop shop for pet needs.
+Petly is a platform connecting pet owners with services for pets. Think of it as a one stop shop for pet needs.
 
 [See a demo of use](https://www.canva.com/design/DAHUJybw69o/v-Y_QB83QcxXMgasG8BSiA/watch?utm_content=DAHUJybw69o&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd8e74fbbf1)
 
