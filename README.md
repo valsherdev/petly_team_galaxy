@@ -2,11 +2,25 @@
 
 We are in our third and final project of the Makers Software Engineering bootcamp specialising in Java for this part of the course.
 
+ - Valeryia Sherman
+ - Trouli Kambouri
+ - Naima Ahsan
+ - Seb Block
+
 # Welcome to Petly!
 
 ### What is Petly?
 
 Petly is a platform connection pet owners with services for pets. Think of it as a one stop shop for pet needs.
+
+[See a demo of use](https://www.canva.com/design/DAHUJybw69o/v-Y_QB83QcxXMgasG8BSiA/watch?utm_content=DAHUJybw69o&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd8e74fbbf1)
+
+This was our demo which we presented over - will update with talked through demo
+
+It is also deployed on Render - click the link below:
+
+[Petly](https://petly-team-galaxy.onrender.com/dashboard/provider)
+
 
 ## Existing features
 
@@ -26,6 +40,7 @@ This app has these features implemented
   * See services - search by type of service needed which will bring up distance to pet owner location from nearest to furthest away
   * Book a service - request sent to book a service which will either be approved or declined
   * Message function to message a service if more information is needed or any questions
+  * See all bookings including pending, upcoming, past and declined with ability to rebook a past booking and also leave a 1-5 star review for the service
 
 # Setup
 
@@ -37,7 +52,7 @@ This app has these features implemented
   to open the Settings and go to Plugins and search for Lombok made by Jetbrains and install).
 - Create two new Postgres databases called `petly_dev` and `petly_test`
 - Install Maven `brew install maven`
-- [Set up Auth0](https://journey.makers.tech/pages/auth0) (you only need the "Create an Auth0 app" section)
+- [Set up Auth0]([https://journey.makers.tech/pages/auth0](https://auth0.com/docs/secure/application-credentials) you will need to create an Auth0 application regular web application and use the client keys to apply to the application.yml file. You will also need to add http://localhost:8081/login/oauth2/code/okta and http://localhost:8080/login/oauth2/code/okta to the allowed callback urls and http://localhost:8081 and http://localhost:8080 to the allowed logout urls
 - Build the app and start the server, using the Maven command `mvn spring-boot:run`
 > The database migrations will run automatically at this point
 - Visit `http://localhost:8081/` to sign up
@@ -48,6 +63,7 @@ This app has these features implemented
 - Start the server in a terminal session `mvn spring-boot:run -Dspring-boot.run.profiles=test`
 - Open a new terminal session and navigate to the Petly directory
 - Run your tests in the second terminal session with `mvn test`
+- You can run the feature tests using `mvn verify` but do not have the server running when using this
 
 > All the tests should pass. If one or more fail, read the next section.
 
