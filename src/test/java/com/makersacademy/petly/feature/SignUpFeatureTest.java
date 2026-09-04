@@ -21,7 +21,7 @@ import java.time.Duration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
-public class SignUpTest {
+public class SignUpFeatureTest {
 
     WebDriver driver;
     Faker faker;
