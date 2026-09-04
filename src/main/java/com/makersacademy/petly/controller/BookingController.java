@@ -1,13 +1,7 @@
 package com.makersacademy.petly.controller;
 
-import com.makersacademy.petly.model.Booking;
-import com.makersacademy.petly.model.Pet;
-import com.makersacademy.petly.model.Service;
-import com.makersacademy.petly.model.User;
-import com.makersacademy.petly.repository.BookingRepository;
-import com.makersacademy.petly.repository.PetRepository;
-import com.makersacademy.petly.repository.ServiceRepository;
-import com.makersacademy.petly.repository.UserRepository;
+import com.makersacademy.petly.model.*;
+import com.makersacademy.petly.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -21,7 +15,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class BookingController {
@@ -37,6 +33,9 @@ public class BookingController {
 
     @Autowired
     private PetRepository petRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
@@ -122,10 +121,17 @@ public class BookingController {
         List<Booking> confirmedBookings = bookingRepository.findByOwnerIdAndStatusAndEndTimeAfter(owner.getId(), "CONFIRMED", LocalDateTime.now());
         List<Booking> pastBookings = bookingRepository.findByOwnerIdAndStatusAndEndTimeBefore(owner.getId(), "CONFIRMED", LocalDateTime.now());
 
+        List<Rating> ownerRatings = ratingRepository.findByOwnerId(owner.getId());
+        Map<Long, Integer> ratingByBookingId = new HashMap<>();
+        for (Rating rating : ownerRatings) {
+            ratingByBookingId.put(rating.getBooking().getId(), rating.getStars());
+        }
+
         model.addAttribute("pendingBookings", pendingBookings);
         model.addAttribute("declinedBookings", declinedBookings);
         model.addAttribute("confirmedBookings", confirmedBookings);
         model.addAttribute("pastBookings", pastBookings);
+        model.addAttribute("ratingByBookingId", ratingByBookingId);
         return "bookings/owner";
     }
 

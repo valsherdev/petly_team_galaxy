@@ -2,6 +2,7 @@ package com.makersacademy.petly.controller;
 
 import com.makersacademy.petly.model.Service;
 import com.makersacademy.petly.model.User;
+import com.makersacademy.petly.repository.RatingRepository;
 import com.makersacademy.petly.repository.ServiceRepository;
 import com.makersacademy.petly.repository.UserRepository;
 import com.makersacademy.petly.PostcodeService;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ServiceController {
@@ -34,8 +36,13 @@ public class ServiceController {
     @Autowired
     private DistanceService distanceService;
 
+    @Autowired
+    private RatingRepository ratingRepository;
+
+
     @GetMapping("/services")
-    public String listServices(@RequestParam(required = false) String type, Model model) {
+    public String listServices(@RequestParam(required = false) String type,
+                               @RequestParam(defaultValue = "1000") double maxKm, Model model) {
 
         User user = getCurrentUser();
         List<Service> services = (type == null || type.isBlank())
@@ -82,10 +89,36 @@ public class ServiceController {
             });
         }
 
+
+        Map<Long, Double> avgRatingByServiceId = new HashMap<>();
+        Map<Long, Long> ratingCountByServiceId = new HashMap<>();
+
+        for (Service service: services) {
+            long count = ratingRepository.countByServiceId(service.getId());
+            if (count > 0) {
+                Double averageRating = ratingRepository.findAverageStarsByServiceId(service.getId());
+                avgRatingByServiceId.put(service.getId(), averageRating);
+                ratingCountByServiceId.put(service.getId(), count);
+            }
+        }
+
+
+        services = services.stream()
+                .filter(s -> {
+                    Double dist = distances.get(s.getId());
+                    return dist == null || dist <= maxKm;
+                })
+                .collect(Collectors.toList());
+
+
+
         model.addAttribute("services", services);
         model.addAttribute("selectedType", type);
         model.addAttribute("user", user);
         model.addAttribute("distances", distances);
+        model.addAttribute("avgRatingByServiceId", avgRatingByServiceId);
+        model.addAttribute("ratingCountByServiceId", ratingCountByServiceId);
+        model.addAttribute("maxKm", maxKm);
         return "services/list";
     }
 
